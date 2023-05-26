@@ -5,13 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="89d7ea80-cd68-46b9-b76e-67e50e2a09c3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/checkers/CheckersApp.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/checkers/HelloApplication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/checkers/HelloController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/checkers/hello-view.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/checkers/CheckersApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/checkers/CheckersApp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/checkers/Field.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/checkers/Field.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/checkers/Pawn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/checkers/Pawn.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,7 +72,8 @@
       <workItem from="1685042470363" duration="1993000" />
       <workItem from="1685044491772" duration="630000" />
       <workItem from="1685051118665" duration="3520000" />
-      <workItem from="1685089391991" duration="1010000" />
+      <workItem from="1685089391991" duration="4287000" />
+      <workItem from="1685099775229" duration="10140000" />
     </task>
     <servers />
   </component>
