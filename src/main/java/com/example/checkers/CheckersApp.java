@@ -1,39 +1,35 @@
 package com.example.checkers;
 
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Timer;
 
 public class CheckersApp extends Application {
-
     public static final int FIELD_SIZE = 90;
     public static final int WIDTH = 8;
     public static final int HEIGHT = 8;
-
-    private Field[][] board = new Field[WIDTH][HEIGHT];
-
+    private final Field[][] board = new Field[WIDTH][HEIGHT];
     private final Group fieldGroup = new Group();
     private final Group pawnGroup = new Group();
     private PawnType moveTurn = PawnType.WHITE;
-
+    private final MyTimer myTimer = new MyTimer();
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         Group root = new Group();
         Scene scene = new Scene(root,1000,720);
 
         root.getChildren().addAll(createGame());
+
+        myTimer.createTimers();
+        root.getChildren().add(myTimer.getBlackPawnsTimerText());
+        root.getChildren().add(myTimer.getWhitePawnsTimerText());
+
+        myTimer.startBlackPawnsTimer();
+        myTimer.startWhitePawnsTimer();
+
         primaryStage.setTitle("CheckersApp");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -137,13 +133,13 @@ public class CheckersApp extends Application {
 
         return pawn;
     }
-    private void changeTurn(){
-        if(moveTurn == PawnType.WHITE){
+    private void changeTurn() {
+        if (moveTurn == PawnType.WHITE) {
             moveTurn = PawnType.BLACK;
-        }
-        else{
+        } else {
             moveTurn = PawnType.WHITE;
         }
+        myTimer.pauseResumeTimer();
     }
 
     public static void main(String[] args) {
