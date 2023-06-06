@@ -7,6 +7,9 @@
     <list default="true" id="89d7ea80-cd68-46b9-b76e-67e50e2a09c3" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/checkers/CheckersApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/checkers/CheckersApp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/checkers/MoveResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/checkers/MoveResult.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/checkers/MyTimer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/checkers/MyTimer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/checkers/Pawn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/checkers/Pawn.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,6 +20,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Class" />
+        <option value="Enum" />
       </list>
     </option>
   </component>
@@ -45,7 +49,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/wikto/Desktop/Uczelnia/4 sem/Checkers",
+    "last_opened_file_path": "C:/Users/wikto/Desktop/bajcik-warcaby/Checkers",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -58,6 +62,11 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.example.checkers" />
+    </key>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -72,7 +81,17 @@
       <workItem from="1685051118665" duration="3520000" />
       <workItem from="1685089391991" duration="4287000" />
       <workItem from="1685099775229" duration="14368000" />
-      <workItem from="1685203093121" duration="3996000" />
+      <workItem from="1685203093121" duration="4242000" />
+      <workItem from="1685296668537" duration="445000" />
+      <workItem from="1685302321446" duration="4624000" />
+      <workItem from="1685306957589" duration="13000" />
+      <workItem from="1685367881369" duration="4949000" />
+      <workItem from="1685392533150" duration="12000" />
+      <workItem from="1685704339927" duration="2441000" />
+      <workItem from="1685875417943" duration="49000" />
+      <workItem from="1685902943790" duration="3055000" />
+      <workItem from="1685991783383" duration="5661000" />
+      <workItem from="1686073345720" duration="1899000" />
     </task>
     <servers />
   </component>

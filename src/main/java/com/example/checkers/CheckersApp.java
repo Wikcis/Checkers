@@ -15,7 +15,7 @@ public class CheckersApp extends Application {
     private final Group fieldGroup = new Group();
     private final Group pawnGroup = new Group();
     private PawnType moveTurn = PawnType.WHITE;
-    private final MyTimer myTimer = new MyTimer();
+    private static final MyTimer myTimer = new MyTimer();
     @Override
     public void start(Stage primaryStage) {
         Group root = new Group();
@@ -40,6 +40,11 @@ public class CheckersApp extends Application {
         root.setPrefSize(WIDTH * FIELD_SIZE, HEIGHT * FIELD_SIZE);
         root.getChildren().addAll(fieldGroup, pawnGroup);
 
+        setPawnsOnBoard();
+
+        return root;
+    }
+    private void setPawnsOnBoard(){
         for (int y = 0; y < HEIGHT; y++) {
             for (int x = 0; x < WIDTH; x++) {
                 Field field = new Field(x, y);
@@ -63,20 +68,19 @@ public class CheckersApp extends Application {
                 }
             }
         }
-
-        return root;
     }
 
     private MoveResult tryMove(Pawn pawn, int newX, int newY) {
+        int x0 = toBoard(pawn.getOldX());
+        int y0 = toBoard(pawn.getOldY());
+
         if (board[newX][newY].hasPawn() || (newX + newY) % 2 == 0 || pawn.getType() != moveTurn) {
             return new MoveResult(MoveType.NONE);
         }
 
-        int x0 = toBoard(pawn.getOldX());
-        int y0 = toBoard(pawn.getOldY());
-
         if (Math.abs(newX - x0) == 1 && newY - y0 == pawn.getType().moveDir) {
             changeTurn();
+            System.out.println("Turn: " + moveTurn);
             return new MoveResult(MoveType.NORMAL);
         } else if (Math.abs(newX - x0) == 2) {
 
@@ -84,11 +88,72 @@ public class CheckersApp extends Application {
             int y1 = y0 + (newY - y0) / 2;
 
             if (board[x1][y1].hasPawn() && board[x1][y1].getPawn().getType() != pawn.getType()) {
-                changeTurn();
+                if(!pawnIsFreeToKill(pawn,newX,newY)) {
+                    changeTurn();
+                    System.out.println("Turn: " + moveTurn);
+                }
                 return new MoveResult(MoveType.KILL, board[x1][y1].getPawn());
             }
         }
         return new MoveResult(MoveType.NONE);
+    }
+
+    private boolean pawnIsFreeToKill(Pawn pawn, int currPosX, int currPosY) {
+        int potentialKillX, potentialKillY;
+
+        if (currPosX != 0 && currPosY != 0) {
+            if (board[currPosX - 1][currPosY - 1].hasPawn()) {
+                if (board[currPosX - 1][currPosY - 1].getPawn().getType() != pawn.getType()) {
+                    potentialKillX = currPosX - 1;
+                    potentialKillY = currPosY - 1;
+                    if (potentialKillX != 0 && potentialKillY != 0) {
+                        if (!board[potentialKillX - 1][potentialKillY - 1].hasPawn()) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        if (currPosX != 7 && currPosY != 7){
+            if (board[currPosX + 1][currPosY + 1].hasPawn()) {
+                if (board[currPosX + 1][currPosY + 1].getPawn().getType() != pawn.getType()) {
+                    potentialKillX = currPosX + 1;
+                    potentialKillY = currPosY + 1;
+                    if (potentialKillX != 7 && potentialKillY != 7){
+                        if (!board[potentialKillX + 1][potentialKillY + 1].hasPawn()) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        if(currPosX!=0 && currPosY!=7){
+            if(board[currPosX-1][currPosY+1].hasPawn()) {
+                if(board[currPosX-1][currPosY+1].getPawn().getType() != pawn.getType()){
+                    potentialKillX = currPosX - 1;
+                    potentialKillY = currPosY + 1;
+                    if(potentialKillX!=0 && potentialKillY!=7){
+                        if(!board[potentialKillX-1][potentialKillY+1].hasPawn()) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        if(currPosX!=7 && currPosY!=0){
+            if(board[currPosX+1][currPosY-1].hasPawn()) {
+                if(board[currPosX+1][currPosY-1].getPawn().getType() != pawn.getType()){
+                    potentialKillX = currPosX + 1;
+                    potentialKillY = currPosY - 1;
+                    if(potentialKillX!=7 && potentialKillY!=0){
+                        if(!board[potentialKillX+1][potentialKillY-1].hasPawn()) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     private int toBoard(double pixel) {
@@ -144,5 +209,7 @@ public class CheckersApp extends Application {
 
     public static void main(String[] args) {
         launch(args);
+        myTimer.getBlackPawnsTimer().cancel();
+        myTimer.getWhitePawnsTimer().cancel();
     }
 }

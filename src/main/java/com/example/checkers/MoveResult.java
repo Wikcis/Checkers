@@ -2,13 +2,13 @@ package com.example.checkers;
 
 public class MoveResult {
 
-    private MoveType type;
+    private final MoveType type;
 
     public MoveType getType() {
         return type;
     }
 
-    private Pawn pawn;
+    private final Pawn pawn;
 
     public Pawn getPawn() {
         return pawn;

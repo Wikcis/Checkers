@@ -9,8 +9,7 @@ import static com.example.checkers.PawnType.WHITE;
 
 public class Pawn extends StackPane {
 
-    private PawnType type;
-
+    private final PawnType type;
     private double mouseX, mouseY;
     private double oldX, oldY;
 
@@ -64,9 +63,7 @@ public class Pawn extends StackPane {
             mouseY = e.getSceneY();
         });
 
-        setOnMouseDragged(e -> {
-            relocate(e.getSceneX() - mouseX + oldX, e.getSceneY() - mouseY + oldY);
-        });
+        setOnMouseDragged(e -> relocate(e.getSceneX() - mouseX + oldX, e.getSceneY() - mouseY + oldY));
     }
 
     public void move(int x, int y) {

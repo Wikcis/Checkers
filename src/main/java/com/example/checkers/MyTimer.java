@@ -17,6 +17,14 @@ public class MyTimer {
     private boolean whitePawnsTimerIsPaused = false;
     private boolean blackPawnsTimerIsPaused = true;
 
+    public Timer getWhitePawnsTimer() {
+        return whitePawnsTimer;
+    }
+
+    public Timer getBlackPawnsTimer() {
+        return blackPawnsTimer;
+    }
+
     public Text getWhitePawnsTimerText() {
         return whitePawnsTimerText;
     }
