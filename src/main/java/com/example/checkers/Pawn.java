@@ -10,11 +10,20 @@ import static com.example.checkers.PawnType.WHITE;
 public class Pawn extends StackPane {
 
     private final PawnType type;
+    private PawnOrKing pawnOrKing;
     private double mouseX, mouseY;
     private double oldX, oldY;
 
     public PawnType getType() {
         return type;
+    }
+
+    public void setPawnOrKing(PawnOrKing pOK) {
+        pawnOrKing = pOK;
+    }
+
+    public PawnOrKing getPawnOrKing() {
+        return pawnOrKing;
     }
 
     public double getOldX() {
@@ -25,11 +34,13 @@ public class Pawn extends StackPane {
         return oldY;
     }
 
-    public Pawn(PawnType type, int x, int y) {
+    public Pawn(PawnType type,PawnOrKing pawnOrKing, int x, int y) {
         this.type = type;
-
+        this.pawnOrKing = pawnOrKing;
         move(x, y);
+    }
 
+    public void drawPawn() {
         Ellipse bg = new Ellipse(CheckersApp.FIELD_SIZE * 0.3, CheckersApp.FIELD_SIZE * 0.25);
         if(type == WHITE)
         {
@@ -44,6 +55,20 @@ public class Pawn extends StackPane {
 
         bg.setTranslateX((CheckersApp.FIELD_SIZE - CheckersApp.FIELD_SIZE * 0.3 * 2) / 2);
         bg.setTranslateY((CheckersApp.FIELD_SIZE - CheckersApp.FIELD_SIZE * 0.25 * 2) / 2 + CheckersApp.FIELD_SIZE * 0.05);
+        Ellipse king = null;
+        if(pawnOrKing == PawnOrKing.KING) {
+            king = new Ellipse(CheckersApp.FIELD_SIZE * 0.1, CheckersApp.FIELD_SIZE * 0.09);
+            if(type == WHITE)
+            {
+                king.setFill(Color.BLACK);
+            }
+            else {
+                king.setFill(Color.WHITE);
+            }
+
+            king.setTranslateX((CheckersApp.FIELD_SIZE - CheckersApp.FIELD_SIZE * 0.3 * 2) / 2);
+            king.setTranslateY((CheckersApp.FIELD_SIZE - CheckersApp.FIELD_SIZE * 0.3 * 2) / 2 + CheckersApp.FIELD_SIZE * 0.05);
+        }
 
         Ellipse ellipse = new Ellipse(CheckersApp.FIELD_SIZE * 0.3, CheckersApp.FIELD_SIZE * 0.25);
 
@@ -56,8 +81,9 @@ public class Pawn extends StackPane {
         ellipse.setTranslateX((CheckersApp.FIELD_SIZE - CheckersApp.FIELD_SIZE * 0.3 * 2) / 2);
         ellipse.setTranslateY((CheckersApp.FIELD_SIZE - CheckersApp.FIELD_SIZE * 0.25 * 2) / 2);
 
-        getChildren().addAll(bg, ellipse);
-
+        if(pawnOrKing == PawnOrKing.KING)
+            getChildren().addAll(bg, ellipse, king);
+        else getChildren().addAll(bg, ellipse);
         setOnMousePressed(e -> {
             mouseX = e.getSceneX();
             mouseY = e.getSceneY();

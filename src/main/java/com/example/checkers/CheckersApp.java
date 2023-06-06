@@ -16,6 +16,9 @@ public class CheckersApp extends Application {
     private final Group pawnGroup = new Group();
     private PawnType moveTurn = PawnType.WHITE;
     private static final MyTimer myTimer = new MyTimer();
+    private boolean duringMultipleKill = false;
+    private boolean killAvailableBlack = false;
+    private boolean killAvailableWhite = false;
     @Override
     public void start(Stage primaryStage) {
         Group root = new Group();
@@ -74,28 +77,61 @@ public class CheckersApp extends Application {
         int x0 = toBoard(pawn.getOldX());
         int y0 = toBoard(pawn.getOldY());
 
-        if (board[newX][newY].hasPawn() || (newX + newY) % 2 == 0 || pawn.getType() != moveTurn) {
+        System.out.println("Kill Black: " + killAvailableBlack + ", White: " + killAvailableWhite);
+
+        if (board[newX][newY].hasPawn() || (newX + newY) % 2 == 0 || pawn.getType() != moveTurn && !duringMultipleKill) {
             return new MoveResult(MoveType.NONE);
         }
-
-        if (Math.abs(newX - x0) == 1 && newY - y0 == pawn.getType().moveDir) {
+        if (Math.abs(newX - x0) == 1 && newY - y0 == pawn.getType().moveDir && !duringMultipleKill) {
             changeTurn();
             System.out.println("Turn: " + moveTurn);
-            return new MoveResult(MoveType.NORMAL);
-        } else if (Math.abs(newX - x0) == 2) {
+            MoveResult tmp = new MoveResult(MoveType.NORMAL);
+            checkIfAnyPawnCanKill();
+            return tmp;
+        }
+        else if (Math.abs(newX - x0) == 2) {
 
             int x1 = x0 + (newX - x0) / 2;
             int y1 = y0 + (newY - y0) / 2;
 
             if (board[x1][y1].hasPawn() && board[x1][y1].getPawn().getType() != pawn.getType()) {
+                duringMultipleKill = true;
                 if(!pawnIsFreeToKill(pawn,newX,newY)) {
+                    duringMultipleKill = false;
                     changeTurn();
                     System.out.println("Turn: " + moveTurn);
                 }
-                return new MoveResult(MoveType.KILL, board[x1][y1].getPawn());
+                MoveResult tmp = new MoveResult(MoveType.KILL, board[x1][y1].getPawn());
+                checkIfAnyPawnCanKill();
+                return tmp;
             }
         }
         return new MoveResult(MoveType.NONE);
+    }
+
+    private void checkIfAnyPawnCanKill() {
+        for(int y=0; y<HEIGHT; y++)
+        {
+            for(int x = 0; x<WIDTH; x++)
+            {
+                if(board[x][y].hasPawn())
+                {
+                    Pawn pawn = board[x][y].getPawn();
+                    if(pawnIsFreeToKill(pawn,x,y))
+                    {
+                        if (moveTurn == PawnType.BLACK) {
+                            killAvailableWhite = true;
+                        }
+                        else {
+                            killAvailableBlack = true;
+                        }
+                        return;
+                    }
+                }
+            }
+        }
+        killAvailableBlack = false;
+        killAvailableWhite = false;
     }
 
     private boolean pawnIsFreeToKill(Pawn pawn, int currPosX, int currPosY) {
@@ -161,11 +197,16 @@ public class CheckersApp extends Application {
     }
 
     private Pawn makePawn(PawnType type, int x, int y) {
-        Pawn pawn = new Pawn(type,x, y);
-
+        Pawn pawn = new Pawn(type, PawnOrKing.PAWN,x, y);
+        pawn.drawPawn();
         pawn.setOnMouseReleased(e -> {
             int newX = toBoard(pawn.getLayoutX());
             int newY = toBoard(pawn.getLayoutY());
+
+            if(newY ==  0 || newY == 7) {
+                pawn.setPawnOrKing(PawnOrKing.KING);
+                pawn.drawPawn();
+            }
 
             MoveResult result;
 
@@ -195,7 +236,6 @@ public class CheckersApp extends Application {
                 }
             }
         });
-
         return pawn;
     }
     private void changeTurn() {

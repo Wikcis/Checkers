@@ -5,18 +5,18 @@ import javafx.scene.shape.Rectangle;
 
 public class Field extends Rectangle {
 
-    private Pawn Pawn;
+    private Pawn pawn;
 
     public boolean hasPawn() {
-        return Pawn != null;
+        return pawn != null;
     }
 
     public Pawn getPawn() {
-        return Pawn;
+        return pawn;
     }
 
     public void setPawn(Pawn Pawn) {
-        this.Pawn = Pawn;
+        this.pawn = Pawn;
     }
 
     public Field(int x, int y) {
