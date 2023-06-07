@@ -22,10 +22,6 @@ public class Pawn extends StackPane {
         pawnOrKing = pOK;
     }
 
-    public PawnOrKing getPawnOrKing() {
-        return pawnOrKing;
-    }
-
     public double getOldX() {
         return oldX;
     }

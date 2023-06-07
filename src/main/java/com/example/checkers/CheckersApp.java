@@ -181,11 +181,6 @@ public class CheckersApp extends Application {
             int newX = toBoard(pawn.getLayoutX());
             int newY = toBoard(pawn.getLayoutY());
 
-            if(newY ==  0 || newY == 7) {
-                pawn.setPawnOrKing(PawnOrKing.KING);
-                pawn.drawPawn();
-            }
-
             MoveResult result;
 
             if (newX < 0 || newY < 0 || newX >= WIDTH || newY >= HEIGHT) {
@@ -199,15 +194,9 @@ public class CheckersApp extends Application {
 
             switch (result.getType()) {
                 case NONE -> pawn.abortMove();
-                case NORMAL -> {
-                    pawn.move(newX, newY);
-                    board[x0][y0].setPawn(null);
-                    board[newX][newY].setPawn(pawn);
-                }
+                case NORMAL -> checkIfAPawnIsAKingDrawItAndMove(pawn, newX, newY, x0, y0);
                 case KILL -> {
-                    pawn.move(newX, newY);
-                    board[x0][y0].setPawn(null);
-                    board[newX][newY].setPawn(pawn);
+                    checkIfAPawnIsAKingDrawItAndMove(pawn, newX, newY, x0, y0);
                     Pawn otherPawn = result.getPawn();
                     board[toBoard(otherPawn.getOldX())][toBoard(otherPawn.getOldY())].setPawn(null);
                     pawnGroup.getChildren().remove(otherPawn);
@@ -216,6 +205,17 @@ public class CheckersApp extends Application {
         });
         return pawn;
     }
+
+    private void checkIfAPawnIsAKingDrawItAndMove(Pawn pawn, int newX, int newY, int x0, int y0) {
+        if(newY ==  0 || newY == 7) {
+            pawn.setPawnOrKing(PawnOrKing.KING);
+            pawn.drawPawn();
+        }
+        pawn.move(newX, newY);
+        board[x0][y0].setPawn(null);
+        board[newX][newY].setPawn(pawn);
+    }
+
     private void changeTurn() {
         if (moveTurn == PawnType.WHITE) {
             moveTurn = PawnType.BLACK;
