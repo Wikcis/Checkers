@@ -78,19 +78,9 @@ public class CheckersApp extends Application {
         if (board[newX][newY].hasPawn() || (newX + newY) % 2 == 0 || pawn.getType() != moveTurn && !duringMultipleKill) {
             return new MoveResult(MoveType.NONE);
         }
-        if (Math.abs(newX - x0) == 1 && newY - y0 == pawn.getType().moveDir && !duringMultipleKill) {
-            if(moveTurn == PawnType.WHITE) {
-                if (!checkIfWhitePawnsCanKill()) {
-                    changeTurn();
-                    return new MoveResult(MoveType.NORMAL);
-                }
-            }
-            else {
-                if (!checkIfBlackPawnsCanKill()) {
-                    changeTurn();
-                    return new MoveResult(MoveType.NORMAL);
-                }
-            }
+        if (Math.abs(newX - x0) == 1 && newY - y0 == pawn.getType().moveDir && !duringMultipleKill && !checkIfPawnsCanKill(moveTurn)) {
+            changeTurn();
+            return new MoveResult(MoveType.NORMAL);
         }
         else if (Math.abs(newX - x0) == 2) {
 
@@ -109,13 +99,13 @@ public class CheckersApp extends Application {
         return new MoveResult(MoveType.NONE);
     }
 
-    private boolean checkIfBlackPawnsCanKill() {
+    private boolean checkIfPawnsCanKill(PawnType pawnType) {
         for(int y=0; y<HEIGHT; y++)
         {
             for(int x = 0; x<WIDTH; x++) {
                 if(board[x][y].hasPawn()) {
                     Pawn pawn = board[x][y].getPawn();
-                    if(pawnIsFreeToKill(pawn,x,y) && pawn.getType() == PawnType.BLACK) {
+                    if(pawnIsFreeToKill(pawn,x,y) && pawn.getType() == pawnType) {
                         return true;
                     }
                 }
@@ -123,22 +113,6 @@ public class CheckersApp extends Application {
         }
         return false;
     }
-
-    private boolean checkIfWhitePawnsCanKill() {
-        for(int y=0; y<HEIGHT; y++)
-        {
-            for(int x = 0; x<WIDTH; x++) {
-                if(board[x][y].hasPawn()) {
-                    Pawn pawn = board[x][y].getPawn();
-                    if(pawnIsFreeToKill(pawn,x,y) && pawn.getType() == PawnType.WHITE) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
 
     private boolean pawnIsFreeToKill(Pawn pawn, int currPosX, int currPosY) {
         int potentialKillX, potentialKillY;
