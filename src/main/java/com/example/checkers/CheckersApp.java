@@ -17,8 +17,6 @@ public class CheckersApp extends Application {
     private PawnType moveTurn = PawnType.WHITE;
     private static final MyTimer myTimer = new MyTimer();
     private boolean duringMultipleKill = false;
-    private boolean killAvailableBlack = false;
-    private boolean killAvailableWhite = false;
     @Override
     public void start(Stage primaryStage) {
         Group root = new Group();
@@ -77,17 +75,22 @@ public class CheckersApp extends Application {
         int x0 = toBoard(pawn.getOldX());
         int y0 = toBoard(pawn.getOldY());
 
-        System.out.println("Kill Black: " + killAvailableBlack + ", White: " + killAvailableWhite);
-
         if (board[newX][newY].hasPawn() || (newX + newY) % 2 == 0 || pawn.getType() != moveTurn && !duringMultipleKill) {
             return new MoveResult(MoveType.NONE);
         }
         if (Math.abs(newX - x0) == 1 && newY - y0 == pawn.getType().moveDir && !duringMultipleKill) {
-            changeTurn();
-            System.out.println("Turn: " + moveTurn);
-            MoveResult tmp = new MoveResult(MoveType.NORMAL);
-            checkIfAnyPawnCanKill();
-            return tmp;
+            if(moveTurn == PawnType.WHITE) {
+                if (!checkIfWhitePawnsCanKill()) {
+                    changeTurn();
+                    return new MoveResult(MoveType.NORMAL);
+                }
+            }
+            else {
+                if (!checkIfBlackPawnsCanKill()) {
+                    changeTurn();
+                    return new MoveResult(MoveType.NORMAL);
+                }
+            }
         }
         else if (Math.abs(newX - x0) == 2) {
 
@@ -99,40 +102,43 @@ public class CheckersApp extends Application {
                 if(!pawnIsFreeToKill(pawn,newX,newY)) {
                     duringMultipleKill = false;
                     changeTurn();
-                    System.out.println("Turn: " + moveTurn);
                 }
-                MoveResult tmp = new MoveResult(MoveType.KILL, board[x1][y1].getPawn());
-                checkIfAnyPawnCanKill();
-                return tmp;
+                return new MoveResult(MoveType.KILL, board[x1][y1].getPawn());
             }
         }
         return new MoveResult(MoveType.NONE);
     }
 
-    private void checkIfAnyPawnCanKill() {
+    private boolean checkIfBlackPawnsCanKill() {
         for(int y=0; y<HEIGHT; y++)
         {
-            for(int x = 0; x<WIDTH; x++)
-            {
-                if(board[x][y].hasPawn())
-                {
+            for(int x = 0; x<WIDTH; x++) {
+                if(board[x][y].hasPawn()) {
                     Pawn pawn = board[x][y].getPawn();
-                    if(pawnIsFreeToKill(pawn,x,y))
-                    {
-                        if (moveTurn == PawnType.BLACK) {
-                            killAvailableWhite = true;
-                        }
-                        else {
-                            killAvailableBlack = true;
-                        }
-                        return;
+                    if(pawnIsFreeToKill(pawn,x,y) && pawn.getType() == PawnType.BLACK) {
+                        return true;
                     }
                 }
             }
         }
-        killAvailableBlack = false;
-        killAvailableWhite = false;
+        return false;
     }
+
+    private boolean checkIfWhitePawnsCanKill() {
+        for(int y=0; y<HEIGHT; y++)
+        {
+            for(int x = 0; x<WIDTH; x++) {
+                if(board[x][y].hasPawn()) {
+                    Pawn pawn = board[x][y].getPawn();
+                    if(pawnIsFreeToKill(pawn,x,y) && pawn.getType() == PawnType.WHITE) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
 
     private boolean pawnIsFreeToKill(Pawn pawn, int currPosX, int currPosY) {
         int potentialKillX, potentialKillY;
@@ -182,9 +188,7 @@ public class CheckersApp extends Application {
                     potentialKillX = currPosX + 1;
                     potentialKillY = currPosY - 1;
                     if(potentialKillX!=7 && potentialKillY!=0){
-                        if(!board[potentialKillX+1][potentialKillY-1].hasPawn()) {
-                            return true;
-                        }
+                        return !board[potentialKillX + 1][potentialKillY - 1].hasPawn();
                     }
                 }
             }
