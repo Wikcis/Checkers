@@ -16,6 +16,24 @@ public class MyTimer {
     private int blackPawnsSeconds = 0;
     private boolean whitePawnsTimerIsPaused = false;
     private boolean blackPawnsTimerIsPaused = true;
+    private boolean isWhitePlayerLost = false;
+    private boolean isBlackPlayerLost = false;
+
+    public void setWhitePlayerLost(boolean whitePlayerLost) {
+        isWhitePlayerLost = whitePlayerLost;
+    }
+
+    public void setBlackPlayerLost(boolean blackPlayerLost) {
+        isBlackPlayerLost = blackPlayerLost;
+    }
+
+    public boolean isWhitePlayerLost() {
+        return isWhitePlayerLost;
+    }
+
+    public boolean isBlackPlayerLost() {
+        return isBlackPlayerLost;
+    }
 
     public Timer getWhitePawnsTimer() {
         return whitePawnsTimer;
@@ -77,6 +95,8 @@ public class MyTimer {
         }
 
         if (minutes == 0 && seconds == 0) {
+            if(pawnType == PawnType.WHITE) isWhitePlayerLost = true;
+            else isBlackPlayerLost = true;
             cancelTimer(pawnType);
             return;
         }

@@ -8,6 +8,10 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.util.Objects;
 
@@ -15,18 +19,21 @@ public class CheckersApp extends Application {
     public static final int FIELD_SIZE = 90;
     public static final int WIDTH = 8;
     public static final int HEIGHT = 8;
+    private final int SCENE_HEIGHT = 720;
+    private final int SCENE_WIDTH = 1000;
     private final Field[][] board = new Field[WIDTH][HEIGHT];
     private final Group fieldGroup = new Group();
-    private final Group pawnGroup = new Group();
+    private final Group whitePawnsGroup = new Group();
+    private final Group blackPawnsGroup = new Group();
     private PawnType moveTurn = PawnType.WHITE;
     private static final MyTimer myTimer = new MyTimer();
     private boolean duringMultipleKill = false;
+    private final Stage stage = new Stage();
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("CheckersApp");
+        primaryStage = stage;
+        stage.setTitle("CheckersApp");
 
-        int SCENE_HEIGHT = 720;
-        int SCENE_WIDTH = 1000;
         Pane pane = new Pane();
         Scene scene = new Scene(pane, SCENE_WIDTH, SCENE_HEIGHT);
 
@@ -40,8 +47,8 @@ public class CheckersApp extends Application {
 
         setButtons(primaryStage,pane);
 
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        stage.setScene(scene);
+        stage.show();
     }
 
     private void setButtons(Stage primaryStage, Pane pane) {
@@ -90,7 +97,7 @@ public class CheckersApp extends Application {
     private Parent createGame() {
         Pane root = new Pane();
         root.setPrefSize(WIDTH * FIELD_SIZE, HEIGHT * FIELD_SIZE);
-        root.getChildren().addAll(fieldGroup, pawnGroup);
+        root.getChildren().addAll(fieldGroup, whitePawnsGroup,blackPawnsGroup);
 
         setPawnsOnBoard();
 
@@ -104,25 +111,74 @@ public class CheckersApp extends Application {
 
                 fieldGroup.getChildren().add(field);
 
-                Pawn pawn = null;
-
                 if ((x+y)%2 != 0 && y<HEIGHT/2-1) {
-                    pawn = makePawn(PawnType.BLACK, x, y);
+                    Pawn pawn = makePawn(PawnType.BLACK, x, y);
+                    field.setPawn(pawn);
+                    blackPawnsGroup.getChildren().add(pawn);
                 }
 
                 if ((x+y)%2 != 0 && y>HEIGHT/2) {
-                    pawn = makePawn(PawnType.WHITE, x, y);
-                }
-
-                if (pawn != null) {
+                    Pawn pawn = makePawn(PawnType.WHITE, x, y);
                     field.setPawn(pawn);
-                    pawnGroup.getChildren().add(pawn);
+                    whitePawnsGroup.getChildren().add(pawn);
                 }
             }
         }
     }
 
+    private void checkIfThereIsNoPawns(int whitePawnsAmount, int blackPawnsAmount) {
+        if(whitePawnsAmount == 0) {
+            myTimer.setWhitePlayerLost(true);
+        }else if (blackPawnsAmount == 0){
+            myTimer.setBlackPlayerLost(true);
+        }
+    }
+    private void showEndingScreenIfNeeded() {
+        checkIfThereIsNoPawns(whitePawnsGroup.getChildren().size(),blackPawnsGroup.getChildren().size());
+
+        if(myTimer.isWhitePlayerLost()) {
+            Pane pane = new Pane();
+            Scene scene = new Scene(pane, SCENE_WIDTH, SCENE_HEIGHT);
+
+            Image backgroundImage = new Image(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("black-pawns-win-screen.jpg")));
+
+            ImageView backgroundImageView = new ImageView(backgroundImage);
+            backgroundImageView.setFitWidth(SCENE_WIDTH);
+            backgroundImageView.setFitHeight(SCENE_HEIGHT);
+
+            Text winText = new Text("Black Pawns won the game!");
+            setTextProperties(pane, scene, backgroundImageView, winText);
+        }
+        else if(myTimer.isBlackPlayerLost()) {
+            Pane pane = new Pane();
+            Scene scene = new Scene(pane, SCENE_WIDTH, SCENE_HEIGHT);
+
+            Image backgroundImage = new Image(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("white-pawns-win-screen.jpg")));
+
+            ImageView backgroundImageView = new ImageView(backgroundImage);
+            backgroundImageView.setFitWidth(SCENE_WIDTH);
+            backgroundImageView.setFitHeight(SCENE_HEIGHT);
+
+            Text winText = new Text("White Pawns won the game!");
+            setTextProperties(pane, scene, backgroundImageView, winText);
+        }
+    }
+
+    private void setTextProperties(Pane pane, Scene scene, ImageView backgroundImageView, Text winText) {
+        winText.setFont(Font.font("Arial", FontWeight.BOLD, 36));
+        winText.setFill(Color.BLACK);
+        winText.setLayoutX(100);
+        winText.setLayoutY(100);
+
+        pane.getChildren().addAll(backgroundImageView, winText);
+
+        stage.setScene(scene);
+        stage.show();
+    }
+
     private MoveResult tryMove(Pawn pawn, int newX, int newY) {
+        showEndingScreenIfNeeded();
+
         int x0 = toBoard(pawn.getOldX());
         int y0 = toBoard(pawn.getOldY());
 
@@ -295,7 +351,8 @@ public class CheckersApp extends Application {
                     checkIfAPawnIsAKingDrawItAndMove(pawn, newX, newY, x0, y0);
                     Pawn otherPawn = result.getPawn();
                     board[toBoard(otherPawn.getOldX())][toBoard(otherPawn.getOldY())].setPawn(null);
-                    pawnGroup.getChildren().remove(otherPawn);
+                    if(pawn.getType() == PawnType.WHITE) blackPawnsGroup.getChildren().remove(otherPawn);
+                    else whitePawnsGroup.getChildren().remove(otherPawn);
                 }
             }
         });
