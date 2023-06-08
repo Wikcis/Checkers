@@ -75,10 +75,27 @@ public class CheckersApp extends Application {
         int x0 = toBoard(pawn.getOldX());
         int y0 = toBoard(pawn.getOldY());
 
-        if (board[newX][newY].hasPawn() || (newX + newY) % 2 == 0 || pawn.getType() != moveTurn && !duringMultipleKill) {
+        if (board[newX][newY].hasPawn() || (newX + newY) % 2 == 0 || pawn.getType() != moveTurn && !duringMultipleKill && pawn.getPawnOrKing()!=PawnOrKing.KING) {
             return new MoveResult(MoveType.NONE);
         }
-        if (Math.abs(newX - x0) == 1 && newY - y0 == pawn.getType().moveDir && !duringMultipleKill && !checkIfPawnsCanKill(moveTurn)) {
+
+        if (pawn.getPawnOrKing() == PawnOrKing.KING && pawn.getType() == moveTurn) {
+            duringMultipleKill = false;
+            changeTurn();
+
+            Point killedPawnPosition = returnPositionOfPawnKilledByKing(pawn,newX,newY,x0,y0);
+
+            if(killedPawnPosition != null) {
+                int x1 = killedPawnPosition.getX();
+                int y1 = killedPawnPosition.getY();
+
+                if (validateKillingMove(pawn, newX, newY, x1, y1))
+                    return new MoveResult(MoveType.KILL, board[x1][y1].getPawn());
+            }
+            return new MoveResult(MoveType.NORMAL);
+        }
+
+        if (Math.abs(newX - x0) == 1 && newY - y0 == pawn.getType().moveDir && !duringMultipleKill && !checkIfPawnsCanKill(pawn.getType())) {
             changeTurn();
             return new MoveResult(MoveType.NORMAL);
         }
@@ -87,16 +104,44 @@ public class CheckersApp extends Application {
             int x1 = x0 + (newX - x0) / 2;
             int y1 = y0 + (newY - y0) / 2;
 
-            if (board[x1][y1].hasPawn() && board[x1][y1].getPawn().getType() != pawn.getType()) {
-                duringMultipleKill = true;
-                if(!pawnIsFreeToKill(pawn,newX,newY)) {
-                    duringMultipleKill = false;
-                    changeTurn();
-                }
+            if (validateKillingMove(pawn, newX, newY, x1, y1))
                 return new MoveResult(MoveType.KILL, board[x1][y1].getPawn());
-            }
         }
         return new MoveResult(MoveType.NONE);
+    }
+
+    private boolean validateKillingMove(Pawn pawn, int newX, int newY, int x1, int y1) {
+        if (board[x1][y1].hasPawn() && board[x1][y1].getPawn().getType() != pawn.getType()) {
+            duringMultipleKill = true;
+            if(!pawnIsFreeToKill(pawn,newX,newY)) {
+                duringMultipleKill = false;
+                changeTurn();
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private Point returnPositionOfPawnKilledByKing (Pawn pawn, int newX, int newY,int x0, int y0) {
+        int x1 = 0, y1 = 0;
+
+        if(x0 > newX && y0 < newY) {
+            x1 = newX + 1;
+            y1 = newY - 1;
+        } else if(x0 < newX && y0 < newY) {
+            x1 = newX - 1;
+            y1 = newY - 1;
+        } else if(x0 < newX && y0 > newY) {
+            x1 = newX - 1;
+            y1 = newY + 1;
+        } else if(x0 > newX && y0 > newY) {
+            x1 = newX + 1;
+            y1 = newY + 1;
+        }
+        if(board[x1][y1].hasPawn() && board[x1][y1].getPawn().getType() != pawn.getType()) {
+            return new Point(x1,y1);
+        }
+        return null;
     }
 
     private boolean checkIfPawnsCanKill(PawnType pawnType) {
