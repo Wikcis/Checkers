@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="89d7ea80-cd68-46b9-b76e-67e50e2a09c3" name="Changes" comment="Refactor king spawn">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/checkers/CheckersApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/checkers/CheckersApp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/checkers/Pawn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/checkers/Pawn.java" afterDir="false" />
-    </list>
+    <list default="true" id="89d7ea80-cd68-46b9-b76e-67e50e2a09c3" name="Changes" comment="Add possibility to kill with a King" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -104,7 +100,7 @@
       <workItem from="1686147748699" duration="21000" />
       <workItem from="1686170925984" duration="66000" />
       <workItem from="1686171336506" duration="4904000" />
-      <workItem from="1686219610174" duration="2964000" />
+      <workItem from="1686219610174" duration="3285000" />
     </task>
     <task id="LOCAL-00001" summary="Add possibility to kill multiple pawns">
       <created>1686075549935</created>
@@ -141,7 +137,14 @@
       <option name="project" value="LOCAL" />
       <updated>1686147408484</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Add possibility to kill with a King">
+      <created>1686222814163</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1686222814163</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -164,6 +167,7 @@
     <MESSAGE value="Add validation to move pawn if it can kill another pawn" />
     <MESSAGE value="Refactor validation to move pawn if it can kill another pawn" />
     <MESSAGE value="Refactor king spawn" />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor king spawn" />
+    <MESSAGE value="Add possibility to kill with a King" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add possibility to kill with a King" />
   </component>
 </project>

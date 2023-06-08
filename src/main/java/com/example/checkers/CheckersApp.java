@@ -95,7 +95,7 @@ public class CheckersApp extends Application {
             return new MoveResult(MoveType.NORMAL);
         }
 
-        if (Math.abs(newX - x0) == 1 && newY - y0 == pawn.getType().moveDir && !duringMultipleKill && !checkIfPawnsCanKill(pawn.getType())) {
+        if (Math.abs(newX - x0) == 1 && newY - y0 == pawn.getType().moveDir && !duringMultipleKill && !checkIfPawnsCanKill(moveTurn)) {
             changeTurn();
             return new MoveResult(MoveType.NORMAL);
         }
