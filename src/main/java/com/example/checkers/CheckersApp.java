@@ -4,8 +4,12 @@ import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import java.util.Objects;
 
 public class CheckersApp extends Application {
     public static final int FIELD_SIZE = 90;
@@ -19,8 +23,57 @@ public class CheckersApp extends Application {
     private boolean duringMultipleKill = false;
     @Override
     public void start(Stage primaryStage) {
+        primaryStage.setTitle("CheckersApp");
+
+        int SCENE_HEIGHT = 720;
+        int SCENE_WIDTH = 1000;
+        Pane pane = new Pane();
+        Scene scene = new Scene(pane, SCENE_WIDTH, SCENE_HEIGHT);
+
+        Image backgroundImage = new Image(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("background-image-starting-screen.jpg")));
+
+        ImageView backgroundImageView = new ImageView(backgroundImage);
+        backgroundImageView.setFitWidth(SCENE_WIDTH);
+        backgroundImageView.setFitHeight(SCENE_HEIGHT);
+
+        pane.getChildren().addAll(backgroundImageView);
+
+        setButtons(primaryStage,pane);
+
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    private void setButtons(Stage primaryStage, Pane pane) {
+        Button playWithBotButton = new Button("Play with BOT");
+        playWithBotButton.setOnAction(e -> openGameWindow(primaryStage));
+
+        playWithBotButton.setLayoutX(425);
+        playWithBotButton.setLayoutY(345);
+        playWithBotButton.setPrefHeight(40);
+        playWithBotButton.setPrefWidth(150);
+
+        Button playWithAnotherPlayerButton = new Button("Play with another player");
+        playWithAnotherPlayerButton.setOnAction(e -> openGameWindow(primaryStage));
+
+        playWithAnotherPlayerButton.setLayoutX(425);
+        playWithAnotherPlayerButton.setLayoutY(400);
+        playWithAnotherPlayerButton.setPrefHeight(40);
+        playWithAnotherPlayerButton.setPrefWidth(150);
+
+        Button playOnlineButton = new Button("Play online");
+        playOnlineButton.setOnAction(e -> openGameWindow(primaryStage));
+
+        playOnlineButton.setLayoutX(425);
+        playOnlineButton.setLayoutY(455);
+        playOnlineButton.setPrefHeight(40);
+        playOnlineButton.setPrefWidth(150);
+
+        pane.getChildren().addAll(playWithBotButton,playWithAnotherPlayerButton,playOnlineButton);
+    }
+    private void openGameWindow(Stage primaryStage) {
         Group root = new Group();
-        Scene scene = new Scene(root,1000,720);
+        Scene scene = new Scene(root, 1000, 720);
 
         root.getChildren().addAll(createGame());
 
@@ -31,9 +84,7 @@ public class CheckersApp extends Application {
         myTimer.startBlackPawnsTimer();
         myTimer.startWhitePawnsTimer();
 
-        primaryStage.setTitle("CheckersApp");
         primaryStage.setScene(scene);
-        primaryStage.show();
     }
 
     private Parent createGame() {
