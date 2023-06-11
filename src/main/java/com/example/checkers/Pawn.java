@@ -34,10 +34,10 @@ public class Pawn extends StackPane {
         return oldY;
     }
 
-    public Pawn(PawnType type,PawnOrKing pawnOrKing, int x, int y) {
+    public Pawn(PawnType type,PawnOrKing pawnOrKing,Point pos) {
         this.type = type;
         this.pawnOrKing = pawnOrKing;
-        move(x, y);
+        move(pos);
     }
 
     public void drawPawn() {
@@ -92,9 +92,9 @@ public class Pawn extends StackPane {
         setOnMouseDragged(e -> relocate(e.getSceneX() - mouseX + oldX, e.getSceneY() - mouseY + oldY));
     }
 
-    public void move(int x, int y) {
-        oldX = x * FIELD_SIZE;
-        oldY = y * FIELD_SIZE;
+    public void move(Point pos) {
+        oldX = pos.getX() * FIELD_SIZE;
+        oldY = pos.getY() * FIELD_SIZE;
         relocate(oldX, oldY);
     }
 

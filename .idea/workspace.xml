@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="89d7ea80-cd68-46b9-b76e-67e50e2a09c3" name="Changes" comment="Add ending images">
+    <list default="true" id="89d7ea80-cd68-46b9-b76e-67e50e2a09c3" name="Changes" comment="Add killing validation for King">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/checkers/CheckersApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/checkers/CheckersApp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/checkers/Pawn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/checkers/Pawn.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,8 +17,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Enum" />
         <option value="Class" />
+        <option value="Enum" />
       </list>
     </option>
   </component>
@@ -111,7 +112,7 @@
       <workItem from="1686219610174" duration="3960000" />
       <workItem from="1686223593918" duration="1989000" />
       <workItem from="1686235021718" duration="8656000" />
-      <workItem from="1686478923526" duration="11468000" />
+      <workItem from="1686478923526" duration="16513000" />
     </task>
     <task id="LOCAL-00001" summary="Add possibility to kill multiple pawns">
       <created>1686075549935</created>
@@ -176,7 +177,14 @@
       <option name="project" value="LOCAL" />
       <updated>1686243800486</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Add killing validation for King">
+      <created>1686493454953</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1686493454953</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -203,6 +211,7 @@
     <MESSAGE value="Refactor" />
     <MESSAGE value="Add starting screen" />
     <MESSAGE value="Add ending images" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add ending images" />
+    <MESSAGE value="Add killing validation for King" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add killing validation for King" />
   </component>
 </project>
