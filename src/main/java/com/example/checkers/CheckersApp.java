@@ -78,6 +78,7 @@ public class CheckersApp extends Application {
 
         pane.getChildren().addAll(playWithBotButton,playWithAnotherPlayerButton,playOnlineButton);
     }
+
     private void openGameWindow(Stage primaryStage) {
         Group root = new Group();
         Scene scene = new Scene(root, 1000, 720);
@@ -85,11 +86,11 @@ public class CheckersApp extends Application {
         root.getChildren().addAll(createGame());
 
         myTimer.createTimers();
-        root.getChildren().add(myTimer.getBlackPawnsTimerText());
-        root.getChildren().add(myTimer.getWhitePawnsTimerText());
+        root.getChildren().add(myTimer.getWhitePawnsTimerPane());
+        root.getChildren().add(myTimer.getBlackPawnsTimerPane());
 
-        myTimer.startBlackPawnsTimer();
         myTimer.startWhitePawnsTimer();
+        myTimer.startBlackPawnsTimer();
 
         primaryStage.setScene(scene);
     }
@@ -97,12 +98,17 @@ public class CheckersApp extends Application {
     private Parent createGame() {
         Pane root = new Pane();
         root.setPrefSize(WIDTH * FIELD_SIZE, HEIGHT * FIELD_SIZE);
-        root.getChildren().addAll(fieldGroup, whitePawnsGroup,blackPawnsGroup);
+        root.getChildren().addAll(fieldGroup, whitePawnsGroup, blackPawnsGroup);
 
         setPawnsOnBoard();
 
+        root.setBorder(new Border(
+                new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(2))
+        ));
+
         return root;
     }
+
     private void setPawnsOnBoard(){
         for (int y = 0; y < HEIGHT; y++) {
             for (int x = 0; x < WIDTH; x++) {
@@ -133,6 +139,7 @@ public class CheckersApp extends Application {
             myTimer.setBlackPlayerLost(true);
         }
     }
+
     private void showEndingScreenIfNeeded() {
         checkIfThereIsNoPawns(whitePawnsGroup.getChildren().size(),blackPawnsGroup.getChildren().size());
 

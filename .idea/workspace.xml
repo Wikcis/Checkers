@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="89d7ea80-cd68-46b9-b76e-67e50e2a09c3" name="Changes" comment="Add killing validation for King">
+    <list default="true" id="89d7ea80-cd68-46b9-b76e-67e50e2a09c3" name="Changes" comment="Add Direction class">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/checkers/CheckersApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/checkers/CheckersApp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/checkers/Pawn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/checkers/Pawn.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/checkers/MyTimer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/checkers/MyTimer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -112,7 +112,7 @@
       <workItem from="1686219610174" duration="3960000" />
       <workItem from="1686223593918" duration="1989000" />
       <workItem from="1686235021718" duration="8656000" />
-      <workItem from="1686478923526" duration="16513000" />
+      <workItem from="1686478923526" duration="18615000" />
     </task>
     <task id="LOCAL-00001" summary="Add possibility to kill multiple pawns">
       <created>1686075549935</created>
@@ -184,7 +184,21 @@
       <option name="project" value="LOCAL" />
       <updated>1686493454953</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Add moves validation for King">
+      <created>1686498739553</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1686498739553</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Add Direction class">
+      <created>1686498752686</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1686498752686</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -212,6 +226,8 @@
     <MESSAGE value="Add starting screen" />
     <MESSAGE value="Add ending images" />
     <MESSAGE value="Add killing validation for King" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add killing validation for King" />
+    <MESSAGE value="Add moves validation for King" />
+    <MESSAGE value="Add Direction class" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add Direction class" />
   </component>
 </project>

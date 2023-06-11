@@ -1,13 +1,16 @@
 package com.example.checkers;
 
+import javafx.geometry.Pos;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class MyTimer {
-    private Text whitePawnsTimerText;
-    private Text blackPawnsTimerText;
+    private BorderPane whitePawnsTimerPane;
+    private BorderPane blackPawnsTimerPane;
     private final Timer whitePawnsTimer = new Timer();
     private final Timer blackPawnsTimer = new Timer();
     private int whitePawnsMinutes = 5;
@@ -43,40 +46,56 @@ public class MyTimer {
         return blackPawnsTimer;
     }
 
-    public Text getWhitePawnsTimerText() {
-        return whitePawnsTimerText;
+    public BorderPane getWhitePawnsTimerPane() {
+        return whitePawnsTimerPane;
     }
-    public Text getBlackPawnsTimerText() {
-        return blackPawnsTimerText;
-    }
-    public void createTimers(){
-        blackPawnsTimerText = new Text("05:00");
-        blackPawnsTimerText.setLayoutX(800);
-        blackPawnsTimerText.setLayoutY(120);
-        blackPawnsTimerText.setStyle("-fx-font-size: 30px; -fx-font-weight: bold;");
 
-        whitePawnsTimerText = new Text("05:00");
-        whitePawnsTimerText.setLayoutX(800);
-        whitePawnsTimerText.setLayoutY(570);
-        whitePawnsTimerText.setStyle("-fx-font-size: 30px; -fx-font-weight: bold;");
+    public BorderPane getBlackPawnsTimerPane() {
+        return blackPawnsTimerPane;
     }
+
+    public void createTimers() {
+        Text whitePawnsTimerText = new Text("05:00");
+        whitePawnsTimerText.setStyle("-fx-font-size: 30px; -fx-font-weight: bold;");
+        whitePawnsTimerPane = createTimerPane(whitePawnsTimerText);
+        whitePawnsTimerPane.setLayoutX(800);
+        whitePawnsTimerPane.setLayoutY(120);
+
+        Text blackPawnsTimerText = new Text("05:00");
+        blackPawnsTimerText.setStyle("-fx-font-size: 30px; -fx-font-weight: bold;");
+        blackPawnsTimerPane = createTimerPane(blackPawnsTimerText);
+        blackPawnsTimerPane.setLayoutX(800);
+        blackPawnsTimerPane.setLayoutY(570);
+    }
+
+    private BorderPane createTimerPane(Text timerText) {
+        BorderPane timerPane = new BorderPane();
+        timerPane.setCenter(timerText);
+
+        timerPane.setBorder(new Border(new BorderStroke(
+                Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(3.0))));
+
+        BorderPane.setAlignment(timerText, Pos.CENTER);
+
+        return timerPane;
+    }
+
     public void startWhitePawnsTimer() {
         whitePawnsTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-
-                if (!whitePawnsTimerIsPaused) {
+                if (whitePawnsTimerIsPaused) {
                     updateTimer(PawnType.WHITE);
                 }
             }
         }, 0, 1000);
     }
+
     public void startBlackPawnsTimer() {
         blackPawnsTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-
-                if (!blackPawnsTimerIsPaused) {
+                if (blackPawnsTimerIsPaused) {
                     updateTimer(PawnType.BLACK);
                 }
             }
@@ -111,11 +130,16 @@ public class MyTimer {
         String formattedTime = String.format("%02d:%02d", minutes, seconds);
 
         javafx.application.Platform.runLater(() -> {
+            Text timerText;
+            BorderPane timerPane;
             if (pawnType == PawnType.WHITE) {
-                whitePawnsTimerText.setText(formattedTime);
+                timerPane = whitePawnsTimerPane;
+                timerText = (Text) timerPane.getCenter();
             } else {
-                blackPawnsTimerText.setText(formattedTime);
+                timerPane = blackPawnsTimerPane;
+                timerText = (Text) timerPane.getCenter();
             }
+            timerText.setText(formattedTime);
         });
 
         if (pawnType == PawnType.WHITE) {
@@ -134,6 +158,7 @@ public class MyTimer {
             blackPawnsTimer.cancel();
         }
     }
+
     public void pauseResumeTimer() {
         whitePawnsTimerIsPaused = !whitePawnsTimerIsPaused;
         blackPawnsTimerIsPaused = !blackPawnsTimerIsPaused;
