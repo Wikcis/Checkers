@@ -111,13 +111,13 @@ public class CheckersApp extends Application {
 
                 fieldGroup.getChildren().add(field);
 
-                if ((x+y)%2 != 0 && y<HEIGHT/2-1) {
+                if ((x + y) % 2 != 0 && y < HEIGHT / 2 - 1) {
                     Pawn pawn = makePawn(PawnType.BLACK, x, y);
                     field.setPawn(pawn);
                     blackPawnsGroup.getChildren().add(pawn);
                 }
 
-                if ((x+y)%2 != 0 && y>HEIGHT/2) {
+                if ((x + y) % 2 != 0 && y > HEIGHT / 2) {
                     Pawn pawn = makePawn(PawnType.WHITE, x, y);
                     field.setPawn(pawn);
                     whitePawnsGroup.getChildren().add(pawn);
@@ -179,26 +179,38 @@ public class CheckersApp extends Application {
     private MoveResult tryMove(Pawn pawn, int newX, int newY) {
         showEndingScreenIfNeeded();
 
-        int x0 = toBoard(pawn.getOldX());
-        int y0 = toBoard(pawn.getOldY());
+        if(pawn.getType() != moveTurn) return new MoveResult(MoveType.NONE);
 
-        if (board[newX][newY].hasPawn() || (newX + newY) % 2 == 0 || pawn.getType() != moveTurn && !duringMultipleKill && pawn.getPawnOrKing()!=PawnOrKing.KING) {
+        if (board[newX][newY].hasPawn() || (newX + newY) % 2 == 0 && !duringMultipleKill) {
             return new MoveResult(MoveType.NONE);
         }
 
-        if (pawn.getPawnOrKing() == PawnOrKing.KING && pawn.getType() == moveTurn) {
-            duringMultipleKill = false;
-            changeTurn();
+        int x0 = toBoard(pawn.getOldX());
+        int y0 = toBoard(pawn.getOldY());
 
-            Point killedPawnPosition = returnPositionOfPawnKilledByKing(pawn,newX,newY,x0,y0);
+        if (pawn.getPawnOrKing() == PawnOrKing.KING) {
 
-            if(killedPawnPosition != null) {
-                int x1 = killedPawnPosition.getX();
-                int y1 = killedPawnPosition.getY();
+            Point kingPosition = new Point(x0,y0);
 
-                if (validateKillingMove(pawn, newX, newY, x1, y1))
+            if(checkIfThereIsAnyPawnToKillOnDiagonal(kingPosition, moveTurn))
+            {
+                Point killedPawnPosition = returnPositionOfPawnKilledByKing(pawn,newX,newY,x0,y0);
+
+                if(killedPawnPosition != null) {
+                    duringMultipleKill = true;
+                    int x1 = killedPawnPosition.getX();
+                    int y1 = killedPawnPosition.getY();
+
                     return new MoveResult(MoveType.KILL, board[x1][y1].getPawn());
+                }
+                else return new MoveResult(MoveType.NONE);
             }
+            changeTurn();
+            if(duringMultipleKill) {
+                duringMultipleKill = false;
+                return new MoveResult(MoveType.NONE);
+            }
+
             return new MoveResult(MoveType.NORMAL);
         }
 
@@ -211,16 +223,69 @@ public class CheckersApp extends Application {
             int x1 = x0 + (newX - x0) / 2;
             int y1 = y0 + (newY - y0) / 2;
 
-            if (validateKillingMove(pawn, newX, newY, x1, y1))
+            if (validateKillingMove(pawn, newX, newY, x1, y1)) {
                 return new MoveResult(MoveType.KILL, board[x1][y1].getPawn());
+            }
         }
         return new MoveResult(MoveType.NONE);
+    }
+
+    private boolean checkIfThereIsAnyPawnToKillOnDiagonal(Point pos,PawnType pawnType) {
+        int posX = pos.getX() - 1;
+        int posY = pos.getY() - 1;
+
+        while (posX > 0 && posY > 0) {
+            if (board[posX][posY].hasPawn() && board[posX][posY].getPawn().getType() != pawnType) {
+                if (!board[posX - 1][posY - 1].hasPawn()) {
+                    return true;
+                }
+            }
+            posX--;
+            posY--;
+        }
+
+        posX = pos.getX() + 1;
+        posY = pos.getY() + 1;
+        while ( posX < 7 && posY < 7){
+            if(board[posX][posY].hasPawn() && board[posX][posY].getPawn().getType() != pawnType) {
+                if (!board[posX + 1][posY + 1].hasPawn()) {
+                    return true;
+                }
+            }
+            posX++;
+            posY++;
+        }
+
+        posX = pos.getX() + 1;
+        posY = pos.getY() - 1;
+        while (posX < 7 && posY > 0){
+            if(board[posX][posY].hasPawn() && board[posX][posY].getPawn().getType() != pawnType) {
+                if (!board[posX + 1][posY - 1].hasPawn()) {
+                    return true;
+                }
+            }
+            posX++;
+            posY--;
+        }
+
+        posX = pos.getX() - 1;
+        posY = pos.getY() + 1;
+        while (posX > 0 && posY < 7){
+            if(board[posX][posY].hasPawn() && board[posX][posY].getPawn().getType() != pawnType) {
+                if (!board[posX - 1][posY + 1].hasPawn()) {
+                    return true;
+                }
+            }
+            posX--;
+            posY++;
+        }
+        return false;
     }
 
     private boolean validateKillingMove(Pawn pawn, int newX, int newY, int x1, int y1) {
         if (board[x1][y1].hasPawn() && board[x1][y1].getPawn().getType() != pawn.getType()) {
             duringMultipleKill = true;
-            if(!pawnIsFreeToKill(pawn,newX,newY)) {
+            if (!pawnIsFreeToKill(pawn, newX, newY)) {
                 duringMultipleKill = false;
                 changeTurn();
             }
@@ -265,7 +330,6 @@ public class CheckersApp extends Application {
         }
         return false;
     }
-
     private boolean pawnIsFreeToKill(Pawn pawn, int currPosX, int currPosY) {
         int potentialKillX, potentialKillY;
 
@@ -313,7 +377,7 @@ public class CheckersApp extends Application {
                 if(board[currPosX+1][currPosY-1].getPawn().getType() != pawn.getType()){
                     potentialKillX = currPosX + 1;
                     potentialKillY = currPosY - 1;
-                    if(potentialKillX!=7 && potentialKillY!=0){
+                    if(potentialKillX!=7 && potentialKillY!=0) {
                         return !board[potentialKillX + 1][potentialKillY - 1].hasPawn();
                     }
                 }
