@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -37,7 +38,7 @@ public class CheckersApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage = stage;
-        stage.setTitle("CheckersApp");
+        stage.setTitle("Checkers");
 
         Pane pane = new Pane();
         Scene scene = new Scene(pane, SCENE_WIDTH, SCENE_HEIGHT);
@@ -98,14 +99,34 @@ public class CheckersApp extends Application {
         primaryStage.setScene(scene);
     }
 
+
+
     private Parent createGame() {
+        Rectangle border = createBorder();
+
         Pane root = new Pane();
         root.setPrefSize(WIDTH * FIELD_SIZE, HEIGHT * FIELD_SIZE);
+        root.setLayoutX(0);
+        root.setLayoutY(0);
         root.getChildren().addAll(fieldGroup, whitePawnsGroup, blackPawnsGroup);
+
+        Group group = new Group(border, root);
+        StackPane stackPane = new StackPane(group);
+        stackPane.setLayoutX(Pawn.OFFSET);
+        stackPane.setLayoutY(Pawn.OFFSET);
 
         setPawnsOnBoard();
 
-        return root;
+        return stackPane;
+    }
+
+    private Rectangle createBorder() {
+        double borderSize = 10;
+        Rectangle border = new Rectangle(WIDTH * FIELD_SIZE, HEIGHT * FIELD_SIZE);
+        border.setStroke(Color.BLACK);
+        border.setFill(Color.TRANSPARENT);
+        border.setStrokeWidth(borderSize);
+        return border;
     }
 
     private void setPawnsOnBoard(){
@@ -473,7 +494,6 @@ public class CheckersApp extends Application {
                 result = tryMove(pawn, newPos);
             }
             Point oldPos = new Point(toBoard(pawn.getOldX()),toBoard(pawn.getOldY()));
-
             switch (result.getType()) {
                 case NONE -> pawn.abortMove();
                 case NORMAL -> checkIfAPawnIsAKingDrawItAndMove(pawn, newPos, oldPos);
@@ -490,7 +510,7 @@ public class CheckersApp extends Application {
     }
 
     private void checkIfAPawnIsAKingDrawItAndMove(Pawn pawn, Point newPos,Point oldPos) {
-        if(newPos.getY() ==  0 || newPos.getY() == 7) {
+        if((newPos.getY() ==  7 && pawn.getType() == DARK_PAWN_COLOR) || (newPos.getY() == 0 && pawn.getType() == LIGHT_PAWN_COLOR)) {
             pawn.setPawnOrKing(PawnOrKing.KING);
             pawn.drawPawn();
         }

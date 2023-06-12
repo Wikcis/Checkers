@@ -14,7 +14,7 @@ public class Pawn extends StackPane {
     private PawnOrKing pawnOrKing;
     private double mouseX, mouseY;
     private double oldX, oldY;
-    public static int OFFSET = 50;
+    public static int OFFSET = 30;
     public PawnType getType() {
         return type;
     }
@@ -50,8 +50,8 @@ public class Pawn extends StackPane {
         bg.setStroke(darkPawnColor);
         bg.setStrokeWidth(FIELD_SIZE * 0.03);
 
-        bg.setTranslateX(((FIELD_SIZE - FIELD_SIZE * 0.3 * 2) / 2) + OFFSET);
-        bg.setTranslateY(((FIELD_SIZE - FIELD_SIZE * 0.25 * 2) / 2 + FIELD_SIZE * 0.05)+OFFSET);
+        bg.setTranslateX(((FIELD_SIZE - FIELD_SIZE * 0.3 * 2) / 2));
+        bg.setTranslateY(((FIELD_SIZE - FIELD_SIZE * 0.25 * 2) / 2 + FIELD_SIZE * 0.05));
         Ellipse king = null;
         if(pawnOrKing == PawnOrKing.KING) {
             king = new Ellipse(FIELD_SIZE * 0.1, FIELD_SIZE * 0.09);
@@ -63,8 +63,8 @@ public class Pawn extends StackPane {
                 king.setFill(lightPawnColor);
             }
 
-            king.setTranslateX(((FIELD_SIZE - FIELD_SIZE * 0.3 * 2) / 2) + OFFSET);
-            king.setTranslateY(((FIELD_SIZE - FIELD_SIZE * 0.3 * 2) / 2 + FIELD_SIZE * 0.05)+OFFSET);
+            king.setTranslateX(((FIELD_SIZE - FIELD_SIZE * 0.3 * 2) / 2));
+            king.setTranslateY(((FIELD_SIZE - FIELD_SIZE * 0.3 * 2) / 2 + FIELD_SIZE * 0.05));
         }
 
         Ellipse ellipse = new Ellipse(FIELD_SIZE * 0.3, FIELD_SIZE * 0.25);
@@ -75,8 +75,8 @@ public class Pawn extends StackPane {
         ellipse.setStroke(darkPawnColor);
         ellipse.setStrokeWidth(FIELD_SIZE * 0.03);
 
-        ellipse.setTranslateX(((FIELD_SIZE - FIELD_SIZE * 0.3 * 2) / 2)+OFFSET);
-        ellipse.setTranslateY(((FIELD_SIZE - FIELD_SIZE * 0.25 * 2) / 2)+OFFSET);
+        ellipse.setTranslateX(((FIELD_SIZE - FIELD_SIZE * 0.3 * 2) / 2));
+        ellipse.setTranslateY(((FIELD_SIZE - FIELD_SIZE * 0.25 * 2) / 2));
 
         if(pawnOrKing == PawnOrKing.KING)
             getChildren().addAll(bg, ellipse, king);

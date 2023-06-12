@@ -25,7 +25,7 @@ public class Field extends Rectangle {
         setWidth(FIELD_SIZE);
         setHeight(FIELD_SIZE);
 
-        relocate(x * FIELD_SIZE + Pawn.OFFSET, y *FIELD_SIZE + Pawn.OFFSET);
+        relocate(x * FIELD_SIZE, y *FIELD_SIZE);
 
         if((x + y)%2 != 0) setFill(LIGHT_FIELD_COLOR);
         else setFill(DARK_FIELD_COLOR);
