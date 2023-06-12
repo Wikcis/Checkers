@@ -1,10 +1,12 @@
 package com.example.checkers;
 
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class Field extends Rectangle {
+import static com.example.checkers.CheckersApp.FIELD_SIZE;
+import static com.example.checkers.CheckersApp.LIGHT_FIELD_COLOR;
+import static com.example.checkers.CheckersApp.DARK_FIELD_COLOR;
 
+public class Field extends Rectangle {
     private Pawn pawn;
 
     public boolean hasPawn() {
@@ -20,12 +22,12 @@ public class Field extends Rectangle {
     }
 
     public Field(int x, int y) {
-        setWidth(CheckersApp.FIELD_SIZE);
-        setHeight(CheckersApp.FIELD_SIZE);
+        setWidth(FIELD_SIZE);
+        setHeight(FIELD_SIZE);
 
-        relocate(x * CheckersApp.FIELD_SIZE, y * CheckersApp.FIELD_SIZE);
+        relocate(x * FIELD_SIZE + Pawn.OFFSET, y *FIELD_SIZE + Pawn.OFFSET);
 
-        if((x + y)%2 != 0) setFill(Color.RED);
-        else setFill(Color.BLACK);
+        if((x + y)%2 != 0) setFill(LIGHT_FIELD_COLOR);
+        else setFill(DARK_FIELD_COLOR);
     }
 }

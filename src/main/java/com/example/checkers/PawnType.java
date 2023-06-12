@@ -1,7 +1,7 @@
 package com.example.checkers;
 
 public enum PawnType {
-    WHITE(-1), BLACK(1);
+    LIGHT_PAWN_COLOR(-1), DARK_PAWN_COLOR(1);
 
     final int moveDir;
 

@@ -5,15 +5,16 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 
 import static com.example.checkers.CheckersApp.FIELD_SIZE;
-import static com.example.checkers.PawnType.WHITE;
+import static com.example.checkers.PawnType.LIGHT_PAWN_COLOR;
 
 public class Pawn extends StackPane {
-
     private final PawnType type;
+    private final Color lightPawnColor = Color.WHITE;
+    private final Color darkPawnColor = Color.BLACK;
     private PawnOrKing pawnOrKing;
     private double mouseX, mouseY;
     private double oldX, oldY;
-
+    public static int OFFSET = 50;
     public PawnType getType() {
         return type;
     }
@@ -41,45 +42,41 @@ public class Pawn extends StackPane {
     }
 
     public void drawPawn() {
-        Ellipse bg = new Ellipse(CheckersApp.FIELD_SIZE * 0.3, CheckersApp.FIELD_SIZE * 0.25);
-        if(type == WHITE)
-        {
-            bg.setFill(Color.BLACK);
-        }
-        else {
-            bg.setFill(Color.WHITE);
-        }
+        Ellipse bg = new Ellipse(FIELD_SIZE * 0.3, FIELD_SIZE * 0.25);
 
-        bg.setStroke(Color.BLACK);
-        bg.setStrokeWidth(CheckersApp.FIELD_SIZE * 0.03);
+        if(type == LIGHT_PAWN_COLOR) bg.setFill(darkPawnColor);
+        else bg.setFill(lightPawnColor);
 
-        bg.setTranslateX((CheckersApp.FIELD_SIZE - CheckersApp.FIELD_SIZE * 0.3 * 2) / 2);
-        bg.setTranslateY((CheckersApp.FIELD_SIZE - CheckersApp.FIELD_SIZE * 0.25 * 2) / 2 + CheckersApp.FIELD_SIZE * 0.05);
+        bg.setStroke(darkPawnColor);
+        bg.setStrokeWidth(FIELD_SIZE * 0.03);
+
+        bg.setTranslateX(((FIELD_SIZE - FIELD_SIZE * 0.3 * 2) / 2) + OFFSET);
+        bg.setTranslateY(((FIELD_SIZE - FIELD_SIZE * 0.25 * 2) / 2 + FIELD_SIZE * 0.05)+OFFSET);
         Ellipse king = null;
         if(pawnOrKing == PawnOrKing.KING) {
-            king = new Ellipse(CheckersApp.FIELD_SIZE * 0.1, CheckersApp.FIELD_SIZE * 0.09);
-            if(type == WHITE)
+            king = new Ellipse(FIELD_SIZE * 0.1, FIELD_SIZE * 0.09);
+            if(type == LIGHT_PAWN_COLOR)
             {
-                king.setFill(Color.BLACK);
+                king.setFill(darkPawnColor);
             }
             else {
-                king.setFill(Color.WHITE);
+                king.setFill(lightPawnColor);
             }
 
-            king.setTranslateX((CheckersApp.FIELD_SIZE - CheckersApp.FIELD_SIZE * 0.3 * 2) / 2);
-            king.setTranslateY((CheckersApp.FIELD_SIZE - CheckersApp.FIELD_SIZE * 0.3 * 2) / 2 + CheckersApp.FIELD_SIZE * 0.05);
+            king.setTranslateX(((FIELD_SIZE - FIELD_SIZE * 0.3 * 2) / 2) + OFFSET);
+            king.setTranslateY(((FIELD_SIZE - FIELD_SIZE * 0.3 * 2) / 2 + FIELD_SIZE * 0.05)+OFFSET);
         }
 
-        Ellipse ellipse = new Ellipse(CheckersApp.FIELD_SIZE * 0.3, CheckersApp.FIELD_SIZE * 0.25);
+        Ellipse ellipse = new Ellipse(FIELD_SIZE * 0.3, FIELD_SIZE * 0.25);
 
-        if(type == WHITE) ellipse.setFill(Color.WHITE);
-        else ellipse.setFill(Color.BLACK);
+        if(type == LIGHT_PAWN_COLOR) ellipse.setFill(lightPawnColor);
+        else ellipse.setFill(darkPawnColor);
 
-        ellipse.setStroke(Color.BLACK);
-        ellipse.setStrokeWidth(CheckersApp.FIELD_SIZE * 0.03);
+        ellipse.setStroke(darkPawnColor);
+        ellipse.setStrokeWidth(FIELD_SIZE * 0.03);
 
-        ellipse.setTranslateX((CheckersApp.FIELD_SIZE - CheckersApp.FIELD_SIZE * 0.3 * 2) / 2);
-        ellipse.setTranslateY((CheckersApp.FIELD_SIZE - CheckersApp.FIELD_SIZE * 0.25 * 2) / 2);
+        ellipse.setTranslateX(((FIELD_SIZE - FIELD_SIZE * 0.3 * 2) / 2)+OFFSET);
+        ellipse.setTranslateY(((FIELD_SIZE - FIELD_SIZE * 0.25 * 2) / 2)+OFFSET);
 
         if(pawnOrKing == PawnOrKing.KING)
             getChildren().addAll(bg, ellipse, king);

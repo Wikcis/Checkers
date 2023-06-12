@@ -15,17 +15,22 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.util.Objects;
 
+import static com.example.checkers.PawnType.LIGHT_PAWN_COLOR;
+import static com.example.checkers.PawnType.DARK_PAWN_COLOR;
+
 public class CheckersApp extends Application {
+    public static final Color LIGHT_FIELD_COLOR = Color.RED;
+    public static final Color DARK_FIELD_COLOR = Color.BLACK;
     public static final int FIELD_SIZE = 90;
     public static final int WIDTH = 8;
     public static final int HEIGHT = 8;
-    private final int SCENE_HEIGHT = 720;
-    private final int SCENE_WIDTH = 1000;
+    private final int SCENE_HEIGHT = 800;
+    private final int SCENE_WIDTH = 1080;
     private final Field[][] board = new Field[WIDTH][HEIGHT];
     private final Group fieldGroup = new Group();
     private final Group whitePawnsGroup = new Group();
     private final Group blackPawnsGroup = new Group();
-    private PawnType moveTurn = PawnType.WHITE;
+    private PawnType moveTurn = PawnType.LIGHT_PAWN_COLOR;
     private static final MyTimer myTimer = new MyTimer();
     private boolean duringMultipleKill = false;
     private final Stage stage = new Stage();
@@ -81,17 +86,15 @@ public class CheckersApp extends Application {
 
     private void openGameWindow(Stage primaryStage) {
         Group root = new Group();
-        Scene scene = new Scene(root, 1000, 720);
+        Scene scene = new Scene(root, SCENE_WIDTH, SCENE_HEIGHT);
 
         root.getChildren().addAll(createGame());
 
         myTimer.createTimers();
         root.getChildren().add(myTimer.getWhitePawnsTimerPane());
         root.getChildren().add(myTimer.getBlackPawnsTimerPane());
-
         myTimer.startWhitePawnsTimer();
         myTimer.startBlackPawnsTimer();
-
         primaryStage.setScene(scene);
     }
 
@@ -101,10 +104,6 @@ public class CheckersApp extends Application {
         root.getChildren().addAll(fieldGroup, whitePawnsGroup, blackPawnsGroup);
 
         setPawnsOnBoard();
-
-        root.setBorder(new Border(
-                new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(2))
-        ));
 
         return root;
     }
@@ -118,13 +117,13 @@ public class CheckersApp extends Application {
                 fieldGroup.getChildren().add(field);
 
                 if ((x + y) % 2 != 0 && y < HEIGHT / 2 - 1) {
-                    Pawn pawn = makePawn(PawnType.BLACK, new Point(x,y));
+                    Pawn pawn = makePawn(DARK_PAWN_COLOR, new Point(x,y));
                     field.setPawn(pawn);
                     blackPawnsGroup.getChildren().add(pawn);
                 }
 
                 if ((x + y) % 2 != 0 && y > HEIGHT / 2) {
-                    Pawn pawn = makePawn(PawnType.WHITE, new Point(x,y));
+                    Pawn pawn = makePawn(LIGHT_PAWN_COLOR, new Point(x,y));
                     field.setPawn(pawn);
                     whitePawnsGroup.getChildren().add(pawn);
                 }
@@ -482,7 +481,7 @@ public class CheckersApp extends Application {
                     checkIfAPawnIsAKingDrawItAndMove(pawn, newPos, oldPos);
                     Pawn otherPawn = result.getPawn();
                     board[toBoard(otherPawn.getOldX())][toBoard(otherPawn.getOldY())].setPawn(null);
-                    if(pawn.getType() == PawnType.WHITE) blackPawnsGroup.getChildren().remove(otherPawn);
+                    if(pawn.getType() == LIGHT_PAWN_COLOR) blackPawnsGroup.getChildren().remove(otherPawn);
                     else whitePawnsGroup.getChildren().remove(otherPawn);
                 }
             }
@@ -501,10 +500,10 @@ public class CheckersApp extends Application {
     }
 
     private void changeTurn() {
-        if (moveTurn == PawnType.WHITE) {
-            moveTurn = PawnType.BLACK;
+        if (moveTurn == LIGHT_PAWN_COLOR) {
+            moveTurn = DARK_PAWN_COLOR;
         } else {
-            moveTurn = PawnType.WHITE;
+            moveTurn = LIGHT_PAWN_COLOR;
         }
         myTimer.pauseResumeTimer();
     }

@@ -4,9 +4,11 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static com.example.checkers.PawnType.LIGHT_PAWN_COLOR;
+import static com.example.checkers.PawnType.DARK_PAWN_COLOR;
 
 public class MyTimer {
     private BorderPane whitePawnsTimerPane;
@@ -85,7 +87,7 @@ public class MyTimer {
             @Override
             public void run() {
                 if (whitePawnsTimerIsPaused) {
-                    updateTimer(PawnType.WHITE);
+                    updateTimer(LIGHT_PAWN_COLOR);
                 }
             }
         }, 0, 1000);
@@ -96,7 +98,7 @@ public class MyTimer {
             @Override
             public void run() {
                 if (blackPawnsTimerIsPaused) {
-                    updateTimer(PawnType.BLACK);
+                    updateTimer(DARK_PAWN_COLOR);
                 }
             }
         }, 0, 1000);
@@ -105,7 +107,7 @@ public class MyTimer {
     private void updateTimer(PawnType pawnType) {
         int minutes;
         int seconds;
-        if (pawnType == PawnType.WHITE) {
+        if (pawnType == LIGHT_PAWN_COLOR) {
             minutes = whitePawnsMinutes;
             seconds = whitePawnsSeconds;
         } else {
@@ -114,7 +116,7 @@ public class MyTimer {
         }
 
         if (minutes == 0 && seconds == 0) {
-            if(pawnType == PawnType.WHITE) isWhitePlayerLost = true;
+            if(pawnType == LIGHT_PAWN_COLOR) isWhitePlayerLost = true;
             else isBlackPlayerLost = true;
             cancelTimer(pawnType);
             return;
@@ -132,7 +134,7 @@ public class MyTimer {
         javafx.application.Platform.runLater(() -> {
             Text timerText;
             BorderPane timerPane;
-            if (pawnType == PawnType.WHITE) {
+            if (pawnType == LIGHT_PAWN_COLOR) {
                 timerPane = whitePawnsTimerPane;
                 timerText = (Text) timerPane.getCenter();
             } else {
@@ -142,7 +144,7 @@ public class MyTimer {
             timerText.setText(formattedTime);
         });
 
-        if (pawnType == PawnType.WHITE) {
+        if (pawnType == LIGHT_PAWN_COLOR) {
             whitePawnsMinutes = minutes;
             whitePawnsSeconds = seconds;
         } else {
@@ -152,7 +154,7 @@ public class MyTimer {
     }
 
     private void cancelTimer(PawnType pawnType) {
-        if (pawnType == PawnType.WHITE) {
+        if (pawnType == LIGHT_PAWN_COLOR) {
             whitePawnsTimer.cancel();
         } else {
             blackPawnsTimer.cancel();
