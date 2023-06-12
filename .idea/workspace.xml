@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="89d7ea80-cd68-46b9-b76e-67e50e2a09c3" name="Changes" comment="Add variables for colors">
+    <list default="true" id="89d7ea80-cd68-46b9-b76e-67e50e2a09c3" name="Changes" comment="Create border for board">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/checkers/CheckersApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/checkers/CheckersApp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/checkers/Field.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/checkers/Field.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/checkers/Pawn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/checkers/Pawn.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/checkers/MyTimer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/checkers/MyTimer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -116,7 +114,7 @@
       <workItem from="1686235021718" duration="8656000" />
       <workItem from="1686478923526" duration="21411000" />
       <workItem from="1686582500542" duration="495000" />
-      <workItem from="1686600653173" duration="7034000" />
+      <workItem from="1686600653173" duration="7763000" />
     </task>
     <task id="LOCAL-00001" summary="Add possibility to kill multiple pawns">
       <created>1686075549935</created>
@@ -216,7 +214,14 @@
       <option name="project" value="LOCAL" />
       <updated>1686603701506</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Create border for board">
+      <created>1686607937914</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1686607937914</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -248,6 +253,7 @@
     <MESSAGE value="Add Direction class" />
     <MESSAGE value="Add border to timers" />
     <MESSAGE value="Add variables for colors" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add variables for colors" />
+    <MESSAGE value="Create border for board" />
+    <option name="LAST_COMMIT_MESSAGE" value="Create border for board" />
   </component>
 </project>

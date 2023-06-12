@@ -57,13 +57,13 @@ public class MyTimer {
     }
 
     public void createTimers() {
-        Text whitePawnsTimerText = new Text("05:00");
+        Text whitePawnsTimerText = new Text("Time: \n05:00");
         whitePawnsTimerText.setStyle("-fx-font-size: 30px; -fx-font-weight: bold;");
         whitePawnsTimerPane = createTimerPane(whitePawnsTimerText);
         whitePawnsTimerPane.setLayoutX(800);
         whitePawnsTimerPane.setLayoutY(120);
 
-        Text blackPawnsTimerText = new Text("05:00");
+        Text blackPawnsTimerText = new Text("Time: \n05:00");
         blackPawnsTimerText.setStyle("-fx-font-size: 30px; -fx-font-weight: bold;");
         blackPawnsTimerPane = createTimerPane(blackPawnsTimerText);
         blackPawnsTimerPane.setLayoutX(800);
@@ -129,7 +129,7 @@ public class MyTimer {
             seconds--;
         }
 
-        String formattedTime = String.format("%02d:%02d", minutes, seconds);
+        String formattedTime = String.format("Time: \n%02d:%02d", minutes, seconds);
 
         javafx.application.Platform.runLater(() -> {
             Text timerText;
