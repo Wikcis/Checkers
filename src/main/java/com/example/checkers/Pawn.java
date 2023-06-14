@@ -14,7 +14,7 @@ public class Pawn extends StackPane {
     private PawnOrKing pawnOrKing;
     private double mouseX, mouseY;
     private double oldX, oldY;
-    public static int OFFSET = 30;
+    public static int OFFSET = 50;
     public PawnType getType() {
         return type;
     }

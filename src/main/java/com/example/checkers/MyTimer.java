@@ -136,11 +136,10 @@ public class MyTimer {
             BorderPane timerPane;
             if (pawnType == LIGHT_PAWN_COLOR) {
                 timerPane = whitePawnsTimerPane;
-                timerText = (Text) timerPane.getCenter();
             } else {
                 timerPane = blackPawnsTimerPane;
-                timerText = (Text) timerPane.getCenter();
             }
+            timerText = (Text) timerPane.getCenter();
             timerText.setText(formattedTime);
         });
 

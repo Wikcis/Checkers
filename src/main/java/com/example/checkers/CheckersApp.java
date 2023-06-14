@@ -1,6 +1,7 @@
 package com.example.checkers;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -34,6 +35,7 @@ public class CheckersApp extends Application {
     private PawnType moveTurn = PawnType.LIGHT_PAWN_COLOR;
     private static final MyTimer myTimer = new MyTimer();
     private boolean duringMultipleKill = false;
+    private boolean isGameReady = false;
     private final Stage stage = new Stage();
     @Override
     public void start(Stage primaryStage) {
@@ -55,13 +57,33 @@ public class CheckersApp extends Application {
 
         stage.setScene(scene);
         stage.show();
+
+        createThreadForEndingScreen();
+    }
+
+    private void createThreadForEndingScreen() {
+        Thread endingScreenThread = new Thread(() -> {
+            while (true) {
+                if (myTimer.isWhitePlayerLost() || myTimer.isBlackPlayerLost()) {
+                    Platform.runLater(this::showEndingScreenIfNeeded);
+                    break;
+                }
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        endingScreenThread.setDaemon(true);
+        endingScreenThread.start();
     }
 
     private void setButtons(Stage primaryStage, Pane pane) {
         Button playWithBotButton = new Button("Play with BOT");
         playWithBotButton.setOnAction(e -> openGameWindow(primaryStage));
 
-        playWithBotButton.setLayoutX(425);
+        playWithBotButton.setLayoutX(465);
         playWithBotButton.setLayoutY(345);
         playWithBotButton.setPrefHeight(40);
         playWithBotButton.setPrefWidth(150);
@@ -69,7 +91,7 @@ public class CheckersApp extends Application {
         Button playWithAnotherPlayerButton = new Button("Play with another player");
         playWithAnotherPlayerButton.setOnAction(e -> openGameWindow(primaryStage));
 
-        playWithAnotherPlayerButton.setLayoutX(425);
+        playWithAnotherPlayerButton.setLayoutX(465);
         playWithAnotherPlayerButton.setLayoutY(400);
         playWithAnotherPlayerButton.setPrefHeight(40);
         playWithAnotherPlayerButton.setPrefWidth(150);
@@ -77,7 +99,7 @@ public class CheckersApp extends Application {
         Button playOnlineButton = new Button("Play online");
         playOnlineButton.setOnAction(e -> openGameWindow(primaryStage));
 
-        playOnlineButton.setLayoutX(425);
+        playOnlineButton.setLayoutX(465);
         playOnlineButton.setLayoutY(455);
         playOnlineButton.setPrefHeight(40);
         playOnlineButton.setPrefWidth(150);
@@ -97,6 +119,54 @@ public class CheckersApp extends Application {
         myTimer.startWhitePawnsTimer();
         myTimer.startBlackPawnsTimer();
         primaryStage.setScene(scene);
+    }
+
+    private void checkIfThereIsNoPawns(int whitePawnsAmount, int blackPawnsAmount) {
+        if(whitePawnsAmount == 0) {
+            myTimer.setWhitePlayerLost(true);
+        }else if (blackPawnsAmount == 0){
+            myTimer.setBlackPlayerLost(true);
+        }
+    }
+
+    private void setTextProperties(Pane pane, Scene scene, ImageView backgroundImageView, Text winText) {
+        winText.setFont(Font.font("Arial", FontWeight.BOLD, 36));
+        winText.setFill(Color.BLACK);
+        winText.setLayoutX(100);
+        winText.setLayoutY(100);
+
+        pane.getChildren().addAll(backgroundImageView, winText);
+
+        stage.setScene(scene);
+        stage.show();
+    }
+    private void showEndingScreenIfNeeded() {
+        if(myTimer.isWhitePlayerLost()) {
+            Pane pane = new Pane();
+            Scene scene = new Scene(pane, SCENE_WIDTH, SCENE_HEIGHT);
+
+            Image backgroundImage = new Image(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("black-pawns-win-screen.jpg")));
+
+            ImageView backgroundImageView = new ImageView(backgroundImage);
+            backgroundImageView.setFitWidth(SCENE_WIDTH);
+            backgroundImageView.setFitHeight(SCENE_HEIGHT);
+
+            Text winText = new Text("Black Pawns won the game!");
+            setTextProperties(pane, scene, backgroundImageView, winText);
+        }
+        else if(myTimer.isBlackPlayerLost()) {
+            Pane pane = new Pane();
+            Scene scene = new Scene(pane, SCENE_WIDTH, SCENE_HEIGHT);
+
+            Image backgroundImage = new Image(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("white-pawns-win-screen.jpg")));
+
+            ImageView backgroundImageView = new ImageView(backgroundImage);
+            backgroundImageView.setFitWidth(SCENE_WIDTH);
+            backgroundImageView.setFitHeight(SCENE_HEIGHT);
+
+            Text winText = new Text("White Pawns won the game!");
+            setTextProperties(pane, scene, backgroundImageView, winText);
+        }
     }
 
     private Parent createGame() {
@@ -135,7 +205,19 @@ public class CheckersApp extends Application {
 
                 fieldGroup.getChildren().add(field);
 
-                if ((x + y) % 2 != 0 && y < HEIGHT / 2 - 1) {
+                if (((x + y) % 8 == 1 || (x + y) % 8 == 3) && y < HEIGHT / 2 - 1) {
+                    Pawn pawn = makePawn(DARK_PAWN_COLOR, new Point(x,y));
+                    field.setPawn(pawn);
+                    blackPawnsGroup.getChildren().add(pawn);
+                }
+
+                if ((x + y) % 2 != 0 && y > HEIGHT / 2) {
+                    Pawn pawn = makePawn(LIGHT_PAWN_COLOR, new Point(x, y));
+                    field.setPawn(pawn);
+                    whitePawnsGroup.getChildren().add(pawn);
+                }
+
+                /*if ((x + y) % 2 != 0 && y < HEIGHT / 2 - 1) {
                     Pawn pawn = makePawn(DARK_PAWN_COLOR, new Point(x,y));
                     field.setPawn(pawn);
                     blackPawnsGroup.getChildren().add(pawn);
@@ -145,60 +227,10 @@ public class CheckersApp extends Application {
                     Pawn pawn = makePawn(LIGHT_PAWN_COLOR, new Point(x,y));
                     field.setPawn(pawn);
                     whitePawnsGroup.getChildren().add(pawn);
-                }
+                }*/
             }
         }
-    }
-
-    private void checkIfThereIsNoPawns(int whitePawnsAmount, int blackPawnsAmount) {
-        if(whitePawnsAmount == 0) {
-            myTimer.setWhitePlayerLost(true);
-        }else if (blackPawnsAmount == 0){
-            myTimer.setBlackPlayerLost(true);
-        }
-    }
-
-    private void showEndingScreenIfNeeded() {
-        checkIfThereIsNoPawns(whitePawnsGroup.getChildren().size(),blackPawnsGroup.getChildren().size());
-
-        if(myTimer.isWhitePlayerLost()) {
-            Pane pane = new Pane();
-            Scene scene = new Scene(pane, SCENE_WIDTH, SCENE_HEIGHT);
-
-            Image backgroundImage = new Image(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("black-pawns-win-screen.jpg")));
-
-            ImageView backgroundImageView = new ImageView(backgroundImage);
-            backgroundImageView.setFitWidth(SCENE_WIDTH);
-            backgroundImageView.setFitHeight(SCENE_HEIGHT);
-
-            Text winText = new Text("Black Pawns won the game!");
-            setTextProperties(pane, scene, backgroundImageView, winText);
-        }
-        else if(myTimer.isBlackPlayerLost()) {
-            Pane pane = new Pane();
-            Scene scene = new Scene(pane, SCENE_WIDTH, SCENE_HEIGHT);
-
-            Image backgroundImage = new Image(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("white-pawns-win-screen.jpg")));
-
-            ImageView backgroundImageView = new ImageView(backgroundImage);
-            backgroundImageView.setFitWidth(SCENE_WIDTH);
-            backgroundImageView.setFitHeight(SCENE_HEIGHT);
-
-            Text winText = new Text("White Pawns won the game!");
-            setTextProperties(pane, scene, backgroundImageView, winText);
-        }
-    }
-
-    private void setTextProperties(Pane pane, Scene scene, ImageView backgroundImageView, Text winText) {
-        winText.setFont(Font.font("Arial", FontWeight.BOLD, 36));
-        winText.setFill(Color.BLACK);
-        winText.setLayoutX(100);
-        winText.setLayoutY(100);
-
-        pane.getChildren().addAll(backgroundImageView, winText);
-
-        stage.setScene(scene);
-        stage.show();
+        isGameReady = true;
     }
 
     private boolean checkIfThereIsYourPawnOnDiagonal(Point pos,Point newPos,Pawn pawn) {
@@ -284,6 +316,58 @@ public class CheckersApp extends Application {
         while (posX > 0 && posY < 7){
             if(board[posX][posY].hasPawn() && board[posX][posY].getPawn().getType() != pawnType) {
                 if (!board[posX - 1][posY + 1].hasPawn()) {
+                    return true;
+                }
+            }
+            posX--;
+            posY++;
+        }
+        return false;
+    }
+
+    private boolean checkIfThereIsAnyPawnToKillOnDiagonalWithoutKilledPawn(Point pos,PawnType pawnType,Point killedPawnPos) {
+        int posX = pos.getX() - 1;
+        int posY = pos.getY() - 1;
+
+        while (posX > 0 && posY > 0) {
+            if (board[posX][posY].hasPawn() && board[posX][posY].getPawn().getType() != pawnType) {
+                if (!board[posX - 1][posY - 1].hasPawn() && (posX != killedPawnPos.getX() || posY != killedPawnPos.getY())) {
+                    return true;
+                }
+            }
+            posX--;
+            posY--;
+        }
+
+        posX = pos.getX() + 1;
+        posY = pos.getY() + 1;
+        while ( posX < 7 && posY < 7){
+            if(board[posX][posY].hasPawn() && board[posX][posY].getPawn().getType() != pawnType) {
+                if (!board[posX + 1][posY + 1].hasPawn() && (posX != killedPawnPos.getX() || posY != killedPawnPos.getY())) {
+                    return true;
+                }
+            }
+            posX++;
+            posY++;
+        }
+
+        posX = pos.getX() + 1;
+        posY = pos.getY() - 1;
+        while (posX < 7 && posY > 0){
+            if(board[posX][posY].hasPawn() && board[posX][posY].getPawn().getType() != pawnType) {
+                if (!board[posX + 1][posY - 1].hasPawn() && (posX != killedPawnPos.getX() || posY != killedPawnPos.getY())) {
+                    return true;
+                }
+            }
+            posX++;
+            posY--;
+        }
+
+        posX = pos.getX() - 1;
+        posY = pos.getY() + 1;
+        while (posX > 0 && posY < 7){
+            if(board[posX][posY].hasPawn() && board[posX][posY].getPawn().getType() != pawnType) {
+                if (!board[posX - 1][posY + 1].hasPawn() && (posX != killedPawnPos.getX() || posY != killedPawnPos.getY())) {
                     return true;
                 }
             }
@@ -422,8 +506,6 @@ public class CheckersApp extends Application {
     }
 
     private MoveResult tryMove(Pawn pawn, Point newPos) {
-        showEndingScreenIfNeeded();
-
         if(pawn.getType() != moveTurn) return new MoveResult(MoveType.NONE);
 
         int newX = newPos.getX(), newY = newPos.getY();
@@ -434,22 +516,28 @@ public class CheckersApp extends Application {
 
         Point oldPos = new Point(toBoard(pawn.getOldX()),toBoard(pawn.getOldY()));
 
-        if (pawn.getPawnOrKing() == PawnOrKing.KING) {
+        Point kingPos = returnKingPosition();
+
+        if ((pawn.getPawnOrKing() == PawnOrKing.KING)) {
 
             if(checkIfThereIsAnyPawnToKillOnDiagonal(oldPos, moveTurn))
             {
                 Point killedPawnPosition = returnPositionOfPawnKilledByKing(pawn,newPos,oldPos);
 
                 if(killedPawnPosition != null) {
-                    if(checkIfThereIsAnyPawnToKillOnDiagonal(newPos,moveTurn)){
-                        duringMultipleKill = true;
-                    }
-                    int x1 = killedPawnPosition.getX();
-                    int y1 = killedPawnPosition.getY();
 
-                    return new MoveResult(MoveType.KILL, board[x1][y1].getPawn());
+                    if(checkIfThereIsAnyPawnToKillOnDiagonalWithoutKilledPawn(newPos,moveTurn,killedPawnPosition)){
+                        duringMultipleKill = true;
+                    } else {
+                        duringMultipleKill = false;
+                        changeTurn();
+                    }
+
+                    return new MoveResult(MoveType.KILL, board[killedPawnPosition.getX()][killedPawnPosition.getY()].getPawn());
+                } else {
+                    return new MoveResult(MoveType.NONE);
                 }
-                else return new MoveResult(MoveType.NONE);
+
             }
             if(duringMultipleKill){
                 changeTurn();
@@ -457,7 +545,7 @@ public class CheckersApp extends Application {
                 return new MoveResult(MoveType.NONE);
             }
 
-            if(!checkIfThereIsYourPawnOnDiagonal(oldPos,newPos, pawn))
+            if(!checkIfThereIsYourPawnOnDiagonal(oldPos,newPos, pawn) && (newPos.getX() != oldPos.getX() && newPos.getY() != oldPos.getY()))
             {
                 changeTurn();
                 return new MoveResult(MoveType.NORMAL);
@@ -466,6 +554,7 @@ public class CheckersApp extends Application {
         }
 
         if (Math.abs(newX - oldPos.getX()) == 1 && newY - oldPos.getY() == pawn.getType().moveDir && !duringMultipleKill && !checkIfPawnsCanKill(moveTurn)) {
+            if(kingPos != null && checkIfThereIsAnyPawnToKillOnDiagonal(kingPos, moveTurn)) return new MoveResult(MoveType.NONE);
             changeTurn();
             return new MoveResult(MoveType.NORMAL);
         }
@@ -479,6 +568,21 @@ public class CheckersApp extends Application {
             }
         }
         return new MoveResult(MoveType.NONE);
+    }
+
+    private Point returnKingPosition() {
+        for(int y=0; y<HEIGHT; y++)
+        {
+            for(int x = 0; x<WIDTH; x++) {
+                if(board[x][y].hasPawn()) {
+                    Pawn pawn = board[x][y].getPawn();
+                    if(pawn.getPawnOrKing() == PawnOrKing.KING) {
+                        return new Point(x,y);
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     private Pawn makePawn(PawnType type, Point pos) {
@@ -506,7 +610,10 @@ public class CheckersApp extends Application {
                     else whitePawnsGroup.getChildren().remove(otherPawn);
                 }
             }
+            if(isGameReady)
+                checkIfThereIsNoPawns(whitePawnsGroup.getChildren().size(),blackPawnsGroup.getChildren().size());
         });
+
         return pawn;
     }
 
