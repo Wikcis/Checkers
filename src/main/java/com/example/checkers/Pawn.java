@@ -5,6 +5,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 
 import static com.example.checkers.CheckersApp.FIELD_SIZE;
+import static com.example.checkers.PawnType.BOT;
 import static com.example.checkers.PawnType.LIGHT_PAWN_COLOR;
 
 public class Pawn extends StackPane {
