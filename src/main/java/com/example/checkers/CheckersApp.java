@@ -141,10 +141,10 @@ public class CheckersApp extends Application {
     }
 
     private void setTextProperties(Pane pane, Scene scene, ImageView backgroundImageView, Text winText) {
-        winText.setFont(Font.font("Arial", FontWeight.BOLD, 36));
+        winText.setFont(Font.font("Arial", FontWeight.BOLD, 28));
         winText.setFill(Color.BLACK);
-        winText.setLayoutX(100);
-        winText.setLayoutY(100);
+        winText.setLayoutX(20);
+        winText.setLayoutY(30);
 
         pane.getChildren().addAll(backgroundImageView, winText);
 
@@ -153,28 +153,30 @@ public class CheckersApp extends Application {
     }
 
     private void showEndingScreenIfNeeded() {
+        int ENDING_SCENE_HEIGHT = 400;
+        int ENDING_SCENE_WIDTH = 600;
         if(myTimer.isWhitePlayerLost()) {
             Pane pane = new Pane();
-            Scene scene = new Scene(pane, SCENE_WIDTH, SCENE_HEIGHT);
+            Scene scene = new Scene(pane, ENDING_SCENE_WIDTH, ENDING_SCENE_HEIGHT);
 
             Image backgroundImage = new Image(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("black-pawns-win-screen.jpg")));
 
             ImageView backgroundImageView = new ImageView(backgroundImage);
-            backgroundImageView.setFitWidth(SCENE_WIDTH);
-            backgroundImageView.setFitHeight(SCENE_HEIGHT);
+            backgroundImageView.setFitWidth(ENDING_SCENE_WIDTH);
+            backgroundImageView.setFitHeight(ENDING_SCENE_HEIGHT);
 
             Text winText = new Text("Black Pawns won the game!");
             setTextProperties(pane, scene, backgroundImageView, winText);
         }
         else if(myTimer.isBlackPlayerLost()) {
             Pane pane = new Pane();
-            Scene scene = new Scene(pane, SCENE_WIDTH, SCENE_HEIGHT);
+            Scene scene = new Scene(pane, ENDING_SCENE_WIDTH, ENDING_SCENE_HEIGHT);
 
             Image backgroundImage = new Image(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("white-pawns-win-screen.jpg")));
 
             ImageView backgroundImageView = new ImageView(backgroundImage);
-            backgroundImageView.setFitWidth(SCENE_WIDTH);
-            backgroundImageView.setFitHeight(SCENE_HEIGHT);
+            backgroundImageView.setFitWidth(ENDING_SCENE_WIDTH);
+            backgroundImageView.setFitHeight(ENDING_SCENE_HEIGHT);
 
             Text winText = new Text("White Pawns won the game!");
             setTextProperties(pane, scene, backgroundImageView, winText);
@@ -802,8 +804,12 @@ public class CheckersApp extends Application {
                     randomBotMove = onlyKingKillsBotMovesList.get(rand.nextInt(onlyKingKillsBotMovesList.size()));
                 else if(!onlyKillsBotMovesList.isEmpty())
                     randomBotMove = onlyKillsBotMovesList.get(rand.nextInt(onlyKillsBotMovesList.size()));
-                else
+                else if(!botMovesList.isEmpty())
                     randomBotMove = botMovesList.get(rand.nextInt(botMovesList.size()));
+                else {
+                    myTimer.setBlackPlayerLost(true);
+                    isGameReady = false;
+                }
                 newPos = randomBotMove.getNewPos();
                 oldPos = randomBotMove.getOldPos();
                 switch (randomBotMove.getMoveType()) {
