@@ -222,7 +222,7 @@ public class CheckersApp extends Application {
 
                 fieldGroup.getChildren().add(field);
 
-                if ((x + y) % 2 != 0 && y < HEIGHT / 2 - 1) {
+                if (((x + y) % 8 == 1 ||(x + y) % 8 == 5) && y < HEIGHT / 2 - 1) {
                     Pawn pawn = makePawn(tmpType, new Point(x,y));
                     field.setPawn(pawn);
                     blackPawnsGroup.getChildren().add(pawn);
@@ -233,6 +233,18 @@ public class CheckersApp extends Application {
                     field.setPawn(pawn);
                     whitePawnsGroup.getChildren().add(pawn);
                 }
+
+                /*if ((x + y) % 2 != 0 && y < HEIGHT / 2 - 1) {
+                    Pawn pawn = makePawn(tmpType, new Point(x,y));
+                    field.setPawn(pawn);
+                    blackPawnsGroup.getChildren().add(pawn);
+                }
+
+                if ((x + y) % 2 != 0 && y > HEIGHT / 2) {
+                    Pawn pawn = makePawn(LIGHT_PAWN_COLOR, new Point(x,y));
+                    field.setPawn(pawn);
+                    whitePawnsGroup.getChildren().add(pawn);
+                }*/
             }
         }
         isGameReady = true;
@@ -274,58 +286,6 @@ public class CheckersApp extends Application {
                 if(board[posX][posY].hasPawn() && board[posX][posY].getPawn() != pawn)
                     return true;
             }
-        }
-        return false;
-    }
-
-    private boolean checkIfThereIsAnyPawnToKillOnDiagonal(Point pos,PawnType pawnType) {
-        int posX = pos.getX() - 1;
-        int posY = pos.getY() - 1;
-
-        while (posX > 0 && posY > 0) {
-            if (board[posX][posY].hasPawn() && board[posX][posY].getPawn().getType() != pawnType) {
-                if (!board[posX - 1][posY - 1].hasPawn()) {
-                    return true;
-                }
-            }
-            posX--;
-            posY--;
-        }
-
-        posX = pos.getX() + 1;
-        posY = pos.getY() + 1;
-        while ( posX < 7 && posY < 7){
-            if(board[posX][posY].hasPawn() && board[posX][posY].getPawn().getType() != pawnType) {
-                if (!board[posX + 1][posY + 1].hasPawn()) {
-                    return true;
-                }
-            }
-            posX++;
-            posY++;
-        }
-
-        posX = pos.getX() + 1;
-        posY = pos.getY() - 1;
-        while (posX < 7 && posY > 0){
-            if(board[posX][posY].hasPawn() && board[posX][posY].getPawn().getType() != pawnType) {
-                if (!board[posX + 1][posY - 1].hasPawn()) {
-                    return true;
-                }
-            }
-            posX++;
-            posY--;
-        }
-
-        posX = pos.getX() - 1;
-        posY = pos.getY() + 1;
-        while (posX > 0 && posY < 7){
-            if(board[posX][posY].hasPawn() && board[posX][posY].getPawn().getType() != pawnType) {
-                if (!board[posX - 1][posY + 1].hasPawn()) {
-                    return true;
-                }
-            }
-            posX--;
-            posY++;
         }
         return false;
     }
@@ -554,9 +514,9 @@ public class CheckersApp extends Application {
 
         Point kingPos = returnKingPosition();
 
-        if ((pawn.getPawnOrKing() == PawnOrKing.KING)) {
+        if (pawn.isPawnAKing()) {
 
-            if(checkIfThereIsAnyPawnToKillOnDiagonalWithoutKilledPawn(newPos,moveTurn,null))
+            if(checkIfThereIsAnyPawnToKillOnDiagonalWithoutKilledPawn(oldPos,moveTurn,null))
             {
                 Point killedPawnPosition = returnPositionOfPawnKilledByKing(pawn,newPos,oldPos);
 
@@ -590,7 +550,7 @@ public class CheckersApp extends Application {
         }
 
         if (Math.abs(newX - oldPos.getX()) == 1 && newY - oldPos.getY() == pawn.getType().moveDir && !duringMultipleKill && !checkIfPawnsCanKill(moveTurn)) {
-            if(kingPos != null && checkIfThereIsAnyPawnToKillOnDiagonal(kingPos, moveTurn)) return new MoveResult(MoveType.NONE);
+            if(kingPos != null && checkIfThereIsAnyPawnToKillOnDiagonalWithoutKilledPawn(kingPos, moveTurn,null)) return new MoveResult(MoveType.NONE);
             changeTurn();
             return new MoveResult(MoveType.NORMAL);
         }
@@ -614,9 +574,10 @@ public class CheckersApp extends Application {
                 if(board[x][y].hasPawn()) {
                     Pawn pawn = board[x][y].getPawn();
                     if(pawn.getType() == BOT) {
-                        BotMove botMove = new BotMove();
-                        botMove.setOldPos(new Point(x,y));
                         int potentialKillX, potentialKillY;
+                        if(pawn.isPawnAKing()) {
+
+                        }
 
                         if (x != 0 && y != 0) {
                             if (board[x - 1][y - 1].hasPawn()) {
@@ -625,6 +586,8 @@ public class CheckersApp extends Application {
                                     potentialKillY = y - 1;
                                     if (potentialKillX != 0 && potentialKillY != 0) {
                                         if (!board[potentialKillX - 1][potentialKillY - 1].hasPawn()) {
+                                            BotMove botMove = new BotMove();
+                                            botMove.setOldPos(new Point(x,y));
                                             botMove.setMoveType(MoveType.KILL);
                                             botMove.setNewPos(new Point(potentialKillX - 1,potentialKillY - 1));
                                             botMove.setKilledPawnPos(new Point(potentialKillX,potentialKillY));
@@ -642,6 +605,8 @@ public class CheckersApp extends Application {
                                     potentialKillY = y + 1;
                                     if (potentialKillX != 7 && potentialKillY != 7){
                                         if (!board[potentialKillX + 1][potentialKillY + 1].hasPawn()) {
+                                            BotMove botMove = new BotMove();
+                                            botMove.setOldPos(new Point(x,y));
                                             botMove.setMoveType(MoveType.KILL);
                                             botMove.setNewPos(new Point(potentialKillX + 1,potentialKillY + 1));
                                             botMove.setKilledPawnPos(new Point(potentialKillX,potentialKillY));
@@ -652,6 +617,8 @@ public class CheckersApp extends Application {
                                 }
                             }
                             else{
+                                BotMove botMove = new BotMove();
+                                botMove.setOldPos(new Point(x,y));
                                 botMove.setMoveType(MoveType.NORMAL);
                                 botMove.setNewPos(new Point(x + 1,y + 1));
                                 botMove.setPawn(pawn);
@@ -665,6 +632,8 @@ public class CheckersApp extends Application {
                                     potentialKillY = y + 1;
                                     if(potentialKillX != 0 && potentialKillY != 7){
                                         if(!board[potentialKillX - 1][potentialKillY + 1].hasPawn()) {
+                                            BotMove botMove = new BotMove();
+                                            botMove.setOldPos(new Point(x,y));
                                             botMove.setMoveType(MoveType.KILL);
                                             botMove.setNewPos(new Point(potentialKillX - 1,potentialKillY + 1));
                                             botMove.setKilledPawnPos(new Point(potentialKillX,potentialKillY));
@@ -675,6 +644,8 @@ public class CheckersApp extends Application {
                                 }
                             }
                             else{
+                                BotMove botMove = new BotMove();
+                                botMove.setOldPos(new Point(x,y));
                                 botMove.setMoveType(MoveType.NORMAL);
                                 botMove.setNewPos(new Point(x - 1,y + 1));
                                 botMove.setPawn(pawn);
@@ -688,6 +659,8 @@ public class CheckersApp extends Application {
                                     potentialKillY = y - 1;
                                     if(potentialKillX!=7 && potentialKillY!=0) {
                                         if(!board[potentialKillX + 1][potentialKillY - 1].hasPawn()){
+                                            BotMove botMove = new BotMove();
+                                            botMove.setOldPos(new Point(x,y));
                                             botMove.setMoveType(MoveType.KILL);
                                             botMove.setNewPos(new Point(potentialKillX + 1,potentialKillY - 1));
                                             botMove.setKilledPawnPos(new Point(potentialKillX,potentialKillY));
@@ -710,7 +683,7 @@ public class CheckersApp extends Application {
             for(int x = 0; x<WIDTH; x++) {
                 if(board[x][y].hasPawn()) {
                     Pawn pawn = board[x][y].getPawn();
-                    if(pawn.getPawnOrKing() == PawnOrKing.KING) {
+                    if(pawn.isPawnAKing()) {
                         return new Point(x,y);
                     }
                 }
@@ -729,9 +702,8 @@ public class CheckersApp extends Application {
     }
 
     private Pawn makePawn(PawnType type, Point pos) {
-        Pawn pawn = new Pawn(type, PawnOrKing.PAWN,pos);
+        Pawn pawn = new Pawn(type, false,pos);
         pawn.drawPawn();
-
 
         pawn.setOnMouseReleased(e -> {
             Point newPos;
@@ -754,9 +726,9 @@ public class CheckersApp extends Application {
                     else whitePawnsGroup.getChildren().remove(otherPawn);
                 }
             }
-            if(isGameReady)
-                checkIfThereIsNoPawns(whitePawnsGroup.getChildren().size(),blackPawnsGroup.getChildren().size());
-            if(playingWithBot && moveTurn == DARK_PAWN_COLOR && isGameReady){
+            isGameEndedChecker();
+
+            if(playingWithBot && moveTurn == DARK_PAWN_COLOR){
                 checkRandomPossibleMove();
                 createKillsListFromBotMoves();
                 Random rand = new Random();
@@ -782,15 +754,20 @@ public class CheckersApp extends Application {
                     }
                 }
             }
-            if(isGameReady)
-                checkIfThereIsNoPawns(whitePawnsGroup.getChildren().size(),blackPawnsGroup.getChildren().size());
+            isGameEndedChecker();
+
         });
         return pawn;
     }
 
+    private void isGameEndedChecker() {
+        if(isGameReady)
+            checkIfThereIsNoPawns(whitePawnsGroup.getChildren().size(),blackPawnsGroup.getChildren().size());
+    }
+
     private void checkIfAPawnIsAKingDrawItAndMove(Pawn pawn, Point newPos,Point oldPos) {
         if((newPos.getY() ==  7 && (pawn.getType() == DARK_PAWN_COLOR || pawn.getType() == BOT) || (newPos.getY() == 0 && pawn.getType() == LIGHT_PAWN_COLOR))) {
-            pawn.setPawnOrKing(PawnOrKing.KING);
+            pawn.setPawnOrKing(true);
             pawn.drawPawn();
         }
         pawn.move(newPos);

@@ -5,14 +5,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 
 import static com.example.checkers.CheckersApp.FIELD_SIZE;
-import static com.example.checkers.PawnType.BOT;
 import static com.example.checkers.PawnType.LIGHT_PAWN_COLOR;
 
 public class Pawn extends StackPane {
     private final PawnType type;
     private final Color lightPawnColor = Color.WHITE;
     private final Color darkPawnColor = Color.BLACK;
-    private PawnOrKing pawnOrKing;
+    private boolean isPawnAKing = false;
     private double mouseX, mouseY;
     private double oldX, oldY;
     public static int OFFSET = 50;
@@ -20,12 +19,12 @@ public class Pawn extends StackPane {
         return type;
     }
 
-    public void setPawnOrKing(PawnOrKing pOK) {
-        pawnOrKing = pOK;
+    public void setPawnOrKing(boolean isKing) {
+        isPawnAKing = isKing;
     }
 
-    public PawnOrKing getPawnOrKing() {
-        return pawnOrKing;
+    public boolean isPawnAKing() {
+        return isPawnAKing;
     }
 
     public double getOldX() {
@@ -35,10 +34,11 @@ public class Pawn extends StackPane {
     public double getOldY() {
         return oldY;
     }
+    public int c = 0;
 
-    public Pawn(PawnType type,PawnOrKing pawnOrKing,Point pos) {
+    public Pawn(PawnType type,boolean isKing,Point pos) {
         this.type = type;
-        this.pawnOrKing = pawnOrKing;
+        this.isPawnAKing = isKing;
         move(pos);
     }
 
@@ -54,7 +54,7 @@ public class Pawn extends StackPane {
         bg.setTranslateX(((FIELD_SIZE - FIELD_SIZE * 0.3 * 2) / 2));
         bg.setTranslateY(((FIELD_SIZE - FIELD_SIZE * 0.25 * 2) / 2 + FIELD_SIZE * 0.05));
         Ellipse king = null;
-        if(pawnOrKing == PawnOrKing.KING) {
+        if(isPawnAKing) {
             king = new Ellipse(FIELD_SIZE * 0.1, FIELD_SIZE * 0.09);
             if(type == LIGHT_PAWN_COLOR)
             {
@@ -79,7 +79,7 @@ public class Pawn extends StackPane {
         ellipse.setTranslateX(((FIELD_SIZE - FIELD_SIZE * 0.3 * 2) / 2));
         ellipse.setTranslateY(((FIELD_SIZE - FIELD_SIZE * 0.25 * 2) / 2));
 
-        if(pawnOrKing == PawnOrKing.KING)
+        if(isPawnAKing)
             getChildren().addAll(bg, ellipse, king);
         else getChildren().addAll(bg, ellipse);
         setOnMousePressed(e -> {
