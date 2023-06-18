@@ -42,6 +42,7 @@ public class CheckersApp extends Application {
     private BotMove randomBotMove;
     private List<BotMove> botMovesList;
     private List<BotMove> onlyKillsBotMovesList;
+    private List<BotMove> onlyKingKillsBotMovesList;
     @Override
     public void start(Stage primaryStage) {
         primaryStage = stage;
@@ -290,7 +291,7 @@ public class CheckersApp extends Application {
         return false;
     }
 
-    private boolean checkIfThereIsAnyPawnToKillOnDiagonalWithoutKilledPawn(Point pos,PawnType pawnType,Point killedPawnPos) {
+    private boolean checkIfThereIsAnyPawnToKillOnDiagonal(Point pos, PawnType pawnType, Point killedPawnPos) {
         int posX = pos.getX() - 1;
         int posY = pos.getY() - 1;
 
@@ -495,34 +496,19 @@ public class CheckersApp extends Application {
             return new MoveResult(MoveType.NONE);
         }
 
-        if(pawn.getType() == BOT) {
-            if(moveTurn == DARK_PAWN_COLOR) {
-                botMovesList = new ArrayList<>();
-                checkRandomPossibleMove();
-
-                Random rand = new Random();
-
-                BotMove randomMove = botMovesList.get(rand.nextInt(botMovesList.size()));
-
-                return new MoveResult(randomMove.getMoveType());
-
-            }
-            else return new MoveResult(MoveType.NONE);
-        }
-
         Point oldPos = new Point(toBoard(pawn.getOldX()),toBoard(pawn.getOldY()));
 
         Point kingPos = returnKingPosition();
 
         if (pawn.isPawnAKing()) {
 
-            if(checkIfThereIsAnyPawnToKillOnDiagonalWithoutKilledPawn(oldPos,moveTurn,null))
+            if(checkIfThereIsAnyPawnToKillOnDiagonal(oldPos,moveTurn,null))
             {
                 Point killedPawnPosition = returnPositionOfPawnKilledByKing(pawn,newPos,oldPos);
 
                 if(killedPawnPosition != null) {
 
-                    if(checkIfThereIsAnyPawnToKillOnDiagonalWithoutKilledPawn(newPos,moveTurn,killedPawnPosition)){
+                    if(checkIfThereIsAnyPawnToKillOnDiagonal(newPos,moveTurn,killedPawnPosition)){
                         duringMultipleKill = true;
                     } else {
                         duringMultipleKill = false;
@@ -550,7 +536,7 @@ public class CheckersApp extends Application {
         }
 
         if (Math.abs(newX - oldPos.getX()) == 1 && newY - oldPos.getY() == pawn.getType().moveDir && !duringMultipleKill && !checkIfPawnsCanKill(moveTurn)) {
-            if(kingPos != null && checkIfThereIsAnyPawnToKillOnDiagonalWithoutKilledPawn(kingPos, moveTurn,null)) return new MoveResult(MoveType.NONE);
+            if(kingPos != null && checkIfThereIsAnyPawnToKillOnDiagonal(kingPos, moveTurn,null)) return new MoveResult(MoveType.NONE);
             changeTurn();
             return new MoveResult(MoveType.NORMAL);
         }
@@ -576,96 +562,95 @@ public class CheckersApp extends Application {
                     if(pawn.getType() == BOT) {
                         int potentialKillX, potentialKillY;
                         if(pawn.isPawnAKing()) {
-
+                            checkIfThereIsAnyPawnToKillOnDiagonalAndReturnPossiton(new Point(x,y),pawn);
                         }
-
-                        if (x != 0 && y != 0) {
-                            if (board[x - 1][y - 1].hasPawn()) {
-                                if (board[x - 1][y - 1].getPawn().getType() != pawn.getType()) {
-                                    potentialKillX = x - 1;
-                                    potentialKillY = y - 1;
-                                    if (potentialKillX != 0 && potentialKillY != 0) {
-                                        if (!board[potentialKillX - 1][potentialKillY - 1].hasPawn()) {
-                                            BotMove botMove = new BotMove();
-                                            botMove.setOldPos(new Point(x,y));
-                                            botMove.setMoveType(MoveType.KILL);
-                                            botMove.setNewPos(new Point(potentialKillX - 1,potentialKillY - 1));
-                                            botMove.setKilledPawnPos(new Point(potentialKillX,potentialKillY));
-                                            botMove.setPawn(pawn);
-                                            botMovesList.add(botMove);
+                        else {
+                            if (x != 0 && y != 0) {
+                                if (board[x - 1][y - 1].hasPawn()) {
+                                    if (board[x - 1][y - 1].getPawn().getType() != pawn.getType()) {
+                                        potentialKillX = x - 1;
+                                        potentialKillY = y - 1;
+                                        if (potentialKillX != 0 && potentialKillY != 0) {
+                                            if (!board[potentialKillX - 1][potentialKillY - 1].hasPawn()) {
+                                                BotMove botMove = new BotMove();
+                                                botMove.setOldPos(new Point(x, y));
+                                                botMove.setMoveType(MoveType.KILL);
+                                                botMove.setNewPos(new Point(potentialKillX - 1, potentialKillY - 1));
+                                                botMove.setKilledPawnPos(new Point(potentialKillX, potentialKillY));
+                                                botMove.setPawn(pawn);
+                                                botMovesList.add(botMove);
+                                            }
                                         }
                                     }
                                 }
                             }
-                        }
-                        if (x != 7 && y != 7){
-                            if (board[x + 1][y + 1].hasPawn()) {
-                                if (board[x + 1][y + 1].getPawn().getType() != pawn.getType()) {
-                                    potentialKillX = x + 1;
-                                    potentialKillY = y + 1;
-                                    if (potentialKillX != 7 && potentialKillY != 7){
-                                        if (!board[potentialKillX + 1][potentialKillY + 1].hasPawn()) {
-                                            BotMove botMove = new BotMove();
-                                            botMove.setOldPos(new Point(x,y));
-                                            botMove.setMoveType(MoveType.KILL);
-                                            botMove.setNewPos(new Point(potentialKillX + 1,potentialKillY + 1));
-                                            botMove.setKilledPawnPos(new Point(potentialKillX,potentialKillY));
-                                            botMove.setPawn(pawn);
-                                            botMovesList.add(botMove);
+                            if (x != 7 && y != 7) {
+                                if (board[x + 1][y + 1].hasPawn()) {
+                                    if (board[x + 1][y + 1].getPawn().getType() != pawn.getType()) {
+                                        potentialKillX = x + 1;
+                                        potentialKillY = y + 1;
+                                        if (potentialKillX != 7 && potentialKillY != 7) {
+                                            if (!board[potentialKillX + 1][potentialKillY + 1].hasPawn()) {
+                                                BotMove botMove = new BotMove();
+                                                botMove.setOldPos(new Point(x, y));
+                                                botMove.setMoveType(MoveType.KILL);
+                                                botMove.setNewPos(new Point(potentialKillX + 1, potentialKillY + 1));
+                                                botMove.setKilledPawnPos(new Point(potentialKillX, potentialKillY));
+                                                botMove.setPawn(pawn);
+                                                botMovesList.add(botMove);
+                                            }
                                         }
                                     }
+                                } else {
+                                    BotMove botMove = new BotMove();
+                                    botMove.setOldPos(new Point(x, y));
+                                    botMove.setMoveType(MoveType.NORMAL);
+                                    botMove.setNewPos(new Point(x + 1, y + 1));
+                                    botMove.setPawn(pawn);
+                                    botMovesList.add(botMove);
                                 }
                             }
-                            else{
-                                BotMove botMove = new BotMove();
-                                botMove.setOldPos(new Point(x,y));
-                                botMove.setMoveType(MoveType.NORMAL);
-                                botMove.setNewPos(new Point(x + 1,y + 1));
-                                botMove.setPawn(pawn);
-                                botMovesList.add(botMove);
-                            }
-                        }
-                        if(x != 0 && y != 7){
-                            if(board[x - 1][y + 1].hasPawn()) {
-                                if(board[x - 1][y + 1].getPawn().getType() != pawn.getType()){
-                                    potentialKillX = x - 1;
-                                    potentialKillY = y + 1;
-                                    if(potentialKillX != 0 && potentialKillY != 7){
-                                        if(!board[potentialKillX - 1][potentialKillY + 1].hasPawn()) {
-                                            BotMove botMove = new BotMove();
-                                            botMove.setOldPos(new Point(x,y));
-                                            botMove.setMoveType(MoveType.KILL);
-                                            botMove.setNewPos(new Point(potentialKillX - 1,potentialKillY + 1));
-                                            botMove.setKilledPawnPos(new Point(potentialKillX,potentialKillY));
-                                            botMove.setPawn(pawn);
-                                            botMovesList.add(botMove);
+                            if (x != 0 && y != 7) {
+                                if (board[x - 1][y + 1].hasPawn()) {
+                                    if (board[x - 1][y + 1].getPawn().getType() != pawn.getType()) {
+                                        potentialKillX = x - 1;
+                                        potentialKillY = y + 1;
+                                        if (potentialKillX != 0 && potentialKillY != 7) {
+                                            if (!board[potentialKillX - 1][potentialKillY + 1].hasPawn()) {
+                                                BotMove botMove = new BotMove();
+                                                botMove.setOldPos(new Point(x, y));
+                                                botMove.setMoveType(MoveType.KILL);
+                                                botMove.setNewPos(new Point(potentialKillX - 1, potentialKillY + 1));
+                                                botMove.setKilledPawnPos(new Point(potentialKillX, potentialKillY));
+                                                botMove.setPawn(pawn);
+                                                botMovesList.add(botMove);
+                                            }
                                         }
                                     }
+                                } else {
+                                    BotMove botMove = new BotMove();
+                                    botMove.setOldPos(new Point(x, y));
+                                    botMove.setMoveType(MoveType.NORMAL);
+                                    botMove.setNewPos(new Point(x - 1, y + 1));
+                                    botMove.setPawn(pawn);
+                                    botMovesList.add(botMove);
                                 }
                             }
-                            else{
-                                BotMove botMove = new BotMove();
-                                botMove.setOldPos(new Point(x,y));
-                                botMove.setMoveType(MoveType.NORMAL);
-                                botMove.setNewPos(new Point(x - 1,y + 1));
-                                botMove.setPawn(pawn);
-                                botMovesList.add(botMove);
-                            }
-                        }
-                        if(x != 7 && y != 0){
-                            if(board[x + 1][y - 1].hasPawn()) {
-                                if(board[x + 1][y - 1].getPawn().getType() != pawn.getType()){
-                                    potentialKillX = x + 1;
-                                    potentialKillY = y - 1;
-                                    if(potentialKillX!=7 && potentialKillY!=0) {
-                                        if(!board[potentialKillX + 1][potentialKillY - 1].hasPawn()){
-                                            BotMove botMove = new BotMove();
-                                            botMove.setOldPos(new Point(x,y));
-                                            botMove.setMoveType(MoveType.KILL);
-                                            botMove.setNewPos(new Point(potentialKillX + 1,potentialKillY - 1));
-                                            botMove.setKilledPawnPos(new Point(potentialKillX,potentialKillY));
-                                            botMove.setPawn(pawn);
-                                            botMovesList.add(botMove);
+                            if (x != 7 && y != 0) {
+                                if (board[x + 1][y - 1].hasPawn()) {
+                                    if (board[x + 1][y - 1].getPawn().getType() != pawn.getType()) {
+                                        potentialKillX = x + 1;
+                                        potentialKillY = y - 1;
+                                        if (potentialKillX != 7 && potentialKillY != 0) {
+                                            if (!board[potentialKillX + 1][potentialKillY - 1].hasPawn()) {
+                                                BotMove botMove = new BotMove();
+                                                botMove.setOldPos(new Point(x, y));
+                                                botMove.setMoveType(MoveType.KILL);
+                                                botMove.setNewPos(new Point(potentialKillX + 1, potentialKillY - 1));
+                                                botMove.setKilledPawnPos(new Point(potentialKillX, potentialKillY));
+                                                botMove.setPawn(pawn);
+                                                botMovesList.add(botMove);
+                                            }
                                         }
                                     }
                                 }
@@ -674,6 +659,87 @@ public class CheckersApp extends Application {
                     }
                 }
             }
+        }
+    }
+
+    private void checkIfThereIsAnyPawnToKillOnDiagonalAndReturnPossiton(Point pos, Pawn pawn) {
+        int posX = pos.getX() - 1;
+        int posY = pos.getY() - 1;
+
+        onlyKingKillsBotMovesList = new ArrayList<>();
+
+        while (posX > 0 && posY > 0) {
+            if (board[posX][posY].hasPawn() && board[posX][posY].getPawn().getType() != pawn.getType()) {
+                if (!board[posX - 1][posY - 1].hasPawn()){
+                    BotMove botMove = new BotMove();
+                    botMove.setOldPos(pos);
+                    botMove.setMoveType(MoveType.KILL);
+                    botMove.setNewPos(new Point(posX - 1,posY - 1));
+                    botMove.setKilledPawnPos(new Point(posX, posY));
+                    botMove.setPawn(pawn);
+                    onlyKingKillsBotMovesList.add(botMove);
+                    return;
+                }
+            }
+            posX--;
+            posY--;
+        }
+
+        posX = pos.getX() + 1;
+        posY = pos.getY() + 1;
+        while ( posX < 7 && posY < 7){
+            if(board[posX][posY].hasPawn() && board[posX][posY].getPawn().getType() != pawn.getType()) {
+                if (!board[posX + 1][posY + 1].hasPawn()){
+                    BotMove botMove = new BotMove();
+                    botMove.setOldPos(pos);
+                    botMove.setMoveType(MoveType.KILL);
+                    botMove.setNewPos(new Point(posX + 1,posY + 1));
+                    botMove.setKilledPawnPos(new Point(posX, posY));
+                    botMove.setPawn(pawn);
+                    onlyKingKillsBotMovesList.add(botMove);
+                    return;
+                }
+            }
+            posX++;
+            posY++;
+        }
+
+        posX = pos.getX() + 1;
+        posY = pos.getY() - 1;
+        while (posX < 7 && posY > 0){
+            if(board[posX][posY].hasPawn() && board[posX][posY].getPawn().getType() != pawn.getType()) {
+                if (!board[posX + 1][posY - 1].hasPawn()){
+                    BotMove botMove = new BotMove();
+                    botMove.setOldPos(pos);
+                    botMove.setMoveType(MoveType.KILL);
+                    botMove.setNewPos(new Point(posX + 1,posY - 1));
+                    botMove.setKilledPawnPos(new Point(posX, posY));
+                    botMove.setPawn(pawn);
+                    onlyKingKillsBotMovesList.add(botMove);
+                    return;
+                }
+            }
+            posX++;
+            posY--;
+        }
+
+        posX = pos.getX() - 1;
+        posY = pos.getY() + 1;
+        while (posX > 0 && posY < 7){
+            if(board[posX][posY].hasPawn() && board[posX][posY].getPawn().getType() != pawn.getType()) {
+                if (!board[posX - 1][posY + 1].hasPawn()){
+                    BotMove botMove = new BotMove();
+                    botMove.setOldPos(pos);
+                    botMove.setMoveType(MoveType.KILL);
+                    botMove.setNewPos(new Point(posX - 1,posY + 1));
+                    botMove.setKilledPawnPos(new Point(posX, posY));
+                    botMove.setPawn(pawn);
+                    onlyKingKillsBotMovesList.add(botMove);
+                    return;
+                }
+            }
+            posX--;
+            posY++;
         }
     }
 
@@ -728,11 +794,13 @@ public class CheckersApp extends Application {
             }
             isGameEndedChecker();
 
-            if(playingWithBot && moveTurn == DARK_PAWN_COLOR){
+            if(playingWithBot && moveTurn == DARK_PAWN_COLOR && isGameReady){
                 checkRandomPossibleMove();
                 createKillsListFromBotMoves();
                 Random rand = new Random();
-                if(!onlyKillsBotMovesList.isEmpty())
+                if(onlyKingKillsBotMovesList != null)
+                    randomBotMove = onlyKingKillsBotMovesList.get(rand.nextInt(onlyKingKillsBotMovesList.size()));
+                else if(!onlyKillsBotMovesList.isEmpty())
                     randomBotMove = onlyKillsBotMovesList.get(rand.nextInt(onlyKillsBotMovesList.size()));
                 else
                     randomBotMove = botMovesList.get(rand.nextInt(botMovesList.size()));

@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="89d7ea80-cd68-46b9-b76e-67e50e2a09c3" name="Changes" comment="Add bot moves">
+    <list default="true" id="89d7ea80-cd68-46b9-b76e-67e50e2a09c3" name="Changes" comment="Refactor">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/checkers/CheckersApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/checkers/CheckersApp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/checkers/Pawn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/checkers/Pawn.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/checkers/PawnOrKing.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,7 +122,7 @@
       <workItem from="1686853799434" duration="5939000" />
       <workItem from="1686867926518" duration="2841000" />
       <workItem from="1687030685942" duration="7924000" />
-      <workItem from="1687043008429" duration="3681000" />
+      <workItem from="1687043008429" duration="4841000" />
     </task>
     <task id="LOCAL-00001" summary="Add possibility to kill multiple pawns">
       <created>1686075549935</created>
@@ -259,7 +257,14 @@
       <option name="project" value="LOCAL" />
       <updated>1687036788076</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Refactor">
+      <created>1687048525296</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1687048525296</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -283,7 +288,6 @@
     <MESSAGE value="Refactor validation to move pawn if it can kill another pawn" />
     <MESSAGE value="Refactor king spawn" />
     <MESSAGE value="Add possibility to kill with a King" />
-    <MESSAGE value="Refactor" />
     <MESSAGE value="Add starting screen" />
     <MESSAGE value="Add ending images" />
     <MESSAGE value="Add killing validation for King" />
@@ -296,9 +300,19 @@
     <MESSAGE value="Refactor killing moves by king" />
     <MESSAGE value="Add thread for showing ending screen, refactor king moves" />
     <MESSAGE value="Add bot moves" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add bot moves" />
+    <MESSAGE value="Refactor" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/checkers/CheckersApp.java</url>
+          <line>801</line>
+          <option name="timeStamp" value="43" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
         <watch expression="newPos" />
