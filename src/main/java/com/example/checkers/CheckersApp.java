@@ -60,7 +60,7 @@ public class CheckersApp extends Application {
         pane.getChildren().addAll(backgroundImageView);
 
         setButtons(primaryStage,pane);
-
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("checkers-icon.png"))));
         stage.setScene(scene);
         stage.show();
 
