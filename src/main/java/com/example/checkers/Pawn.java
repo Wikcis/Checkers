@@ -11,7 +11,7 @@ public class Pawn extends StackPane {
     private final PawnType type;
     private final Color lightPawnColor = Color.WHITE;
     private final Color darkPawnColor = Color.BLACK;
-    private boolean isPawnAKing = false;
+    private boolean isPawnAKing;
     private double mouseX, mouseY;
     private double oldX, oldY;
     public static int OFFSET = 50;
@@ -34,7 +34,6 @@ public class Pawn extends StackPane {
     public double getOldY() {
         return oldY;
     }
-    public int c = 0;
 
     public Pawn(PawnType type,boolean isKing,Point pos) {
         this.type = type;

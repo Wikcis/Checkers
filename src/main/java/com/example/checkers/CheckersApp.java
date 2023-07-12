@@ -225,7 +225,7 @@ public class CheckersApp extends Application {
 
                 fieldGroup.getChildren().add(field);
 
-                if (((x + y) % 8 == 1 ||(x + y) % 8 == 5) && y < HEIGHT / 2 - 1) {
+                if ((x + y) % 2 != 0 && y < HEIGHT / 2 - 1) {
                     Pawn pawn = makePawn(tmpType, new Point(x,y));
                     field.setPawn(pawn);
                     blackPawnsGroup.getChildren().add(pawn);
@@ -236,18 +236,6 @@ public class CheckersApp extends Application {
                     field.setPawn(pawn);
                     whitePawnsGroup.getChildren().add(pawn);
                 }
-
-                /*if ((x + y) % 2 != 0 && y < HEIGHT / 2 - 1) {
-                    Pawn pawn = makePawn(tmpType, new Point(x,y));
-                    field.setPawn(pawn);
-                    blackPawnsGroup.getChildren().add(pawn);
-                }
-
-                if ((x + y) % 2 != 0 && y > HEIGHT / 2) {
-                    Pawn pawn = makePawn(LIGHT_PAWN_COLOR, new Point(x,y));
-                    field.setPawn(pawn);
-                    whitePawnsGroup.getChildren().add(pawn);
-                }*/
             }
         }
         isGameReady = true;
@@ -800,12 +788,20 @@ public class CheckersApp extends Application {
                 checkRandomPossibleMove();
                 createKillsListFromBotMoves();
                 Random rand = new Random();
-                if(onlyKingKillsBotMovesList != null)
+                if(onlyKingKillsBotMovesList != null && !onlyKingKillsBotMovesList.isEmpty()) {
                     randomBotMove = onlyKingKillsBotMovesList.get(rand.nextInt(onlyKingKillsBotMovesList.size()));
+                    onlyKingKillsBotMovesList.clear();
+                }
                 else if(!onlyKillsBotMovesList.isEmpty())
+                {
                     randomBotMove = onlyKillsBotMovesList.get(rand.nextInt(onlyKillsBotMovesList.size()));
+                    onlyKillsBotMovesList.clear();
+                }
                 else if(!botMovesList.isEmpty())
+                {
                     randomBotMove = botMovesList.get(rand.nextInt(botMovesList.size()));
+                    botMovesList.clear();
+                }
                 else {
                     myTimer.setBlackPlayerLost(true);
                     isGameReady = false;
@@ -829,7 +825,6 @@ public class CheckersApp extends Application {
                 }
             }
             isGameEndedChecker();
-
         });
         return pawn;
     }
